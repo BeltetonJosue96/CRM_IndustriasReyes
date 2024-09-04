@@ -12,7 +12,8 @@ class PlanMantoController extends Controller
      */
     public function index()
     {
-        //
+        $planes = PlanManto::all();
+        return view('plan_manto.index', compact('planes'));
     }
 
     /**
@@ -20,7 +21,7 @@ class PlanMantoController extends Controller
      */
     public function create()
     {
-        //
+        return view('plan_manto.create');
     }
 
     /**
@@ -28,7 +29,15 @@ class PlanMantoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:25|unique:plan_manto',
+            'descripcion' => 'required|string|max:45|unique:plan_manto',
+            'frecuencia_mes' => 'required|integer|min:1',
+        ]);
+
+        PlanManto::create($validatedData);
+
+        return redirect()->route('plan_manto.index')->with('success', 'Plan de mantenimiento creado exitosamente.');
     }
 
     /**
@@ -36,7 +45,7 @@ class PlanMantoController extends Controller
      */
     public function show(PlanManto $planManto)
     {
-        //
+        return view('plan_manto.show', compact('planManto'));
     }
 
     /**
@@ -44,7 +53,7 @@ class PlanMantoController extends Controller
      */
     public function edit(PlanManto $planManto)
     {
-        //
+        return view('plan_manto.edit', compact('planManto'));
     }
 
     /**
@@ -52,7 +61,15 @@ class PlanMantoController extends Controller
      */
     public function update(Request $request, PlanManto $planManto)
     {
-        //
+        $validatedData = $request->validate([
+            'nombre' => 'required|string|max:25|unique:plan_manto,nombre,' . $planManto->id_plan_manto . ',id_plan_manto',
+            'descripcion' => 'required|string|max:45|unique:plan_manto,descripcion,' . $planManto->id_plan_manto . ',id_plan_manto',
+            'frecuencia_mes' => 'required|integer|min:1',
+        ]);
+
+        $planManto->update($validatedData);
+
+        return redirect()->route('plan_manto.index')->with('success', 'Plan de mantenimiento actualizado exitosamente.');
     }
 
     /**
@@ -60,6 +77,8 @@ class PlanMantoController extends Controller
      */
     public function destroy(PlanManto $planManto)
     {
-        //
+        $planManto->delete();
+
+        return redirect()->route('plan_manto.index')->with('success', 'Plan de mantenimiento eliminado exitosamente.');
     }
 }

@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class PlanManto extends Model
 {
     use HasFactory;
+    protected $table = 'plan_manto';
 }
