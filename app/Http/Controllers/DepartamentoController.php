@@ -12,7 +12,8 @@ class DepartamentoController extends Controller
      */
     public function index()
     {
-        //
+        $departamentos = Departamento::all();
+        return view('departamentos.index', compact('departamentos'));
     }
 
     /**
@@ -20,7 +21,7 @@ class DepartamentoController extends Controller
      */
     public function create()
     {
-        //
+        return view('departamentos.create');
     }
 
     /**
@@ -28,7 +29,15 @@ class DepartamentoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:45|unique:departamento,nombre',
+        ]);
+
+        Departamento::create([
+            'nombre' => $request->nombre,
+        ]);
+
+        return redirect()->route('departamentos.index')->with('success', 'Departamento creado con éxito.');
     }
 
     /**
@@ -36,7 +45,7 @@ class DepartamentoController extends Controller
      */
     public function show(Departamento $departamento)
     {
-        //
+        return view('departamentos.show', compact('departamento'));
     }
 
     /**
@@ -44,7 +53,7 @@ class DepartamentoController extends Controller
      */
     public function edit(Departamento $departamento)
     {
-        //
+        return view('departamentos.edit', compact('departamento'));
     }
 
     /**
@@ -52,7 +61,15 @@ class DepartamentoController extends Controller
      */
     public function update(Request $request, Departamento $departamento)
     {
-        //
+        $request->validate([
+            'nombre' => 'required|string|max:45|unique:departamento,nombre,' . $departamento->id_departamento . ',id_departamento',
+        ]);
+
+        $departamento->update([
+            'nombre' => $request->nombre,
+        ]);
+
+        return redirect()->route('departamentos.index')->with('success', 'Departamento actualizado con éxito.');
     }
 
     /**
@@ -60,6 +77,7 @@ class DepartamentoController extends Controller
      */
     public function destroy(Departamento $departamento)
     {
-        //
+        $departamento->delete();
+        return redirect()->route('departamentos.index')->with('success', 'Departamento eliminado con éxito.');
     }
 }
