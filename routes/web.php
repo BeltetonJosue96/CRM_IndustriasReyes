@@ -9,6 +9,7 @@ use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PlanMantoController;
+use App\Http\Controllers\DetalleVentaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -33,6 +34,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('clientes', ClienteController::class);
     Route::resource('ventas', VentaController::class);
     Route::resource('planes', PlanMantoController::class);
+    Route::resource('detalle_ventas', DetalleVentaController::class);
 });
 
 require __DIR__.'/auth.php';
