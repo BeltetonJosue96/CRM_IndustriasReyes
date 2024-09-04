@@ -9,8 +9,6 @@ class LineaController extends Controller
 {
     /**
      * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function index()
     {
@@ -21,8 +19,6 @@ class LineaController extends Controller
 
     /**
      * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
      */
     public function create()
     {
@@ -32,9 +28,6 @@ class LineaController extends Controller
 
     /**
      * Store a newly created resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
     {
@@ -53,9 +46,6 @@ class LineaController extends Controller
 
     /**
      * Display the specified resource.
-     *
-     * @param \App\Models\Linea $linea
-     * @return \Illuminate\Http\Response
      */
     public function show(Linea $linea)
     {
@@ -65,9 +55,6 @@ class LineaController extends Controller
 
     /**
      * Show the form for editing the specified resource.
-     *
-     * @param \App\Models\Linea $linea
-     * @return \Illuminate\Http\Response
      */
     public function edit(Linea $linea)
     {
@@ -77,10 +64,6 @@ class LineaController extends Controller
 
     /**
      * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Linea $linea
-     * @return \Illuminate\Http\Response
      */
     public function update(Request $request, Linea $linea)
     {
@@ -99,9 +82,6 @@ class LineaController extends Controller
 
     /**
      * Remove the specified resource from storage.
-     *
-     * @param \App\Models\Linea $linea
-     * @return \Illuminate\Http\Response
      */
     public function destroy(Linea $linea)
     {
