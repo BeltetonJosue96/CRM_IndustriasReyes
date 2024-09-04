@@ -12,7 +12,8 @@ class EmpresaController extends Controller
      */
     public function index()
     {
-        //
+        $empresas = Empresa::all();
+        return view('empresas.index', compact('empresas'));
     }
 
     /**
@@ -20,7 +21,7 @@ class EmpresaController extends Controller
      */
     public function create()
     {
-        //
+        return view('empresas.create');
     }
 
     /**
@@ -28,7 +29,14 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'nombre' => 'required | unique:empresas | max:75',
+        ]);
+        $empresa = new Empresa();
+        $empresa->nombre = $request->nombre;
+        $empresa->save();
+
+        return redirect()->route('empresas.index')->with('success', 'Empresa registrada correctamente');
     }
 
     /**
@@ -36,7 +44,7 @@ class EmpresaController extends Controller
      */
     public function show(Empresa $empresa)
     {
-        //
+        return view('empresas.show', compact('empresa'));
     }
 
     /**
@@ -44,7 +52,7 @@ class EmpresaController extends Controller
      */
     public function edit(Empresa $empresa)
     {
-        //
+        return view('empresas.edit', compact('empresa'));
     }
 
     /**
@@ -52,7 +60,12 @@ class EmpresaController extends Controller
      */
     public function update(Request $request, Empresa $empresa)
     {
-        //
+        $request->validate([
+            'nombre' => 'required | unique:empresas '. $empresa->id_empresa . ' | max:75',
+        ]);
+        $empresa->nombre = $request->nombre;
+        $empresa->save();
+        return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente');
     }
 
     /**
@@ -60,6 +73,7 @@ class EmpresaController extends Controller
      */
     public function destroy(Empresa $empresa)
     {
-        //
+        $empresa->delete();
+        return redirect()->route('empresas.index')->with('success', 'Empresa eliminada correctamente');
     }
 }
