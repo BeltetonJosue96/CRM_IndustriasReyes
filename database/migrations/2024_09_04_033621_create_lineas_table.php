@@ -11,9 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('lineas', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('linea', function (Blueprint $table) {
+            $table->id('id_linea'); // Auto-incremental primary key
+            $table->string('nombre', 100)->unique(); // Unique name
+            $table->unsignedBigInteger('id_producto'); // Foreign key
+
+            $table->foreign('id_producto')->references('id_producto')->on('producto')
+                ->onDelete('cascade'); // Add foreign key constraint
+
+            $table->timestamps(); // Optional: created_at and updated_at columns
         });
     }
 
@@ -22,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('lineas');
+        Schema::dropIfExists('linea');
     }
 };
