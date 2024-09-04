@@ -4,6 +4,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductoController;
 use App\Http\Controllers\LineaController;
 use App\Http\Controllers\ModeloController;
+use App\Http\Controllers\DepartamentoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -27,6 +28,9 @@ Route::middleware('auth')->group(function () {
 
     // Rutas para Modelo
     Route::resource('modelos', ModeloController::class);
+
+    // Rutas para Departamento
+    Route::resource('departamentos', DepartamentoController::class);
 });
 
 require __DIR__.'/auth.php';
