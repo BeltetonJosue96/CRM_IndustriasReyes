@@ -11,9 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('productos', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('producto', function (Blueprint $table) {
+            $table->increments('id_producto'); // AUTO_INCREMENT primary key
+            $table->string('nombre', 75)->unique(); // VARCHAR(75) with UNIQUE constraint
+            $table->timestamps(); // Adds created_at and updated_at columns
+
+            // Additional constraints
+            $table->unique('id_producto'); // UNIQUE constraint on id_producto (though this is redundant with the primary key)
         });
     }
 
@@ -22,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('productos');
+        Schema::dropIfExists('producto');
     }
 };
