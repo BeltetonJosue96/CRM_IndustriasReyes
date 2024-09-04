@@ -19,7 +19,7 @@ return new class extends Migration
             $table->primary('id_modelo'); // Primary key
             $table->foreign('id_linea')->references('id_linea')->on('linea')
                 ->onDelete('cascade'); // Foreign key constraint
-            $table->timestamps(); // Created_at and updated_at fields
+            $table->timestamps();
         });
     }
 

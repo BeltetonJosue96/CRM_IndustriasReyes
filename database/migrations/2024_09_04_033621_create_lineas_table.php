@@ -19,7 +19,7 @@ return new class extends Migration
             $table->foreign('id_producto')->references('id_producto')->on('producto')
                 ->onDelete('cascade'); // Add foreign key constraint
 
-            $table->timestamps(); // Optional: created_at and updated_at columns
+            $table->timestamps();
         });
     }
 
