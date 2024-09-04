@@ -12,7 +12,9 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        //
+        // Obtener todos los productos
+        $productos = Producto::all();
+        return view('productos.index', compact('productos'));
     }
 
     /**
@@ -20,7 +22,8 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        //
+        // Mostrar formulario para crear un nuevo producto
+        return view('productos.create');
     }
 
     /**
@@ -28,7 +31,16 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        // Validar y guardar un nuevo producto
+        $request->validate([
+            'nombre' => 'required|unique:producto|max:75',
+        ]);
+
+        $producto = new Producto();
+        $producto->nombre = $request->nombre;
+        $producto->save();
+
+        return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
     }
 
     /**
@@ -36,7 +48,8 @@ class ProductoController extends Controller
      */
     public function show(Producto $producto)
     {
-        //
+        // Mostrar un producto específico
+        return view('productos.show', compact('producto'));
     }
 
     /**
@@ -44,7 +57,8 @@ class ProductoController extends Controller
      */
     public function edit(Producto $producto)
     {
-        //
+        // Mostrar formulario para editar un producto
+        return view('productos.edit', compact('producto'));
     }
 
     /**
@@ -52,7 +66,15 @@ class ProductoController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
-        //
+        // Validar y actualizar un producto existente
+        $request->validate([
+            'nombre' => 'required|unique:producto,nombre,' . $producto->id_producto . '|max:75',
+        ]);
+
+        $producto->nombre = $request->nombre;
+        $producto->save();
+
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado exitosamente.');
     }
 
     /**
@@ -60,6 +82,9 @@ class ProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
-        //
+        // Eliminar un producto
+        $producto->delete();
+
+        return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente.');
     }
 }
