@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Venta;
+use App\Models\Cliente;
 use Illuminate\Http\Request;
 
 class VentaController extends Controller
@@ -12,7 +13,8 @@ class VentaController extends Controller
      */
     public function index()
     {
-        //
+        $ventas = Venta::with('cliente')->get();
+        return view('ventas.index', compact('ventas'));
     }
 
     /**
@@ -20,7 +22,8 @@ class VentaController extends Controller
      */
     public function create()
     {
-        //
+        $clientes = Cliente::all();
+        return view('ventas.create', compact('clientes'));
     }
 
     /**
@@ -28,7 +31,15 @@ class VentaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'fecha_venta' => 'required|date',
+            'descripcion' => 'required|string|max:245',
+            'id_cliente' => 'required|exists:clientes,id_cliente',
+        ]);
+
+        $venta = Venta::create($validatedData);
+
+        return redirect()->route('ventas.index')->with('success', 'Venta creada exitosamente.');
     }
 
     /**
@@ -36,7 +47,7 @@ class VentaController extends Controller
      */
     public function show(Venta $venta)
     {
-        //
+        return view('ventas.show', compact('venta'));
     }
 
     /**
@@ -44,7 +55,8 @@ class VentaController extends Controller
      */
     public function edit(Venta $venta)
     {
-        //
+        $clientes = Cliente::all();
+        return view('ventas.edit', compact('venta', 'clientes'));
     }
 
     /**
@@ -52,7 +64,15 @@ class VentaController extends Controller
      */
     public function update(Request $request, Venta $venta)
     {
-        //
+        $validatedData = $request->validate([
+            'fecha_venta' => 'required|date',
+            'descripcion' => 'required|string|max:245',
+            'id_cliente' => 'required|exists:clientes,id_cliente',
+        ]);
+
+        $venta->update($validatedData);
+
+        return redirect()->route('ventas.index')->with('success', 'Venta actualizada exitosamente.');
     }
 
     /**
@@ -60,6 +80,8 @@ class VentaController extends Controller
      */
     public function destroy(Venta $venta)
     {
-        //
+        $venta->delete();
+
+        return redirect()->route('ventas.index')->with('success', 'Venta eliminada exitosamente.');
     }
 }

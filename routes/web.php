@@ -6,6 +6,8 @@ use App\Http\Controllers\LineaController;
 use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EmpresaController;
+use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\VentaController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -21,20 +23,14 @@ Route::middleware('auth')->group(function () {
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
-    // Rutas para Producto
+    // Rutas para Modulos
     Route::resource('productos', ProductoController::class);
-
-    // Rutas para Linea
     Route::resource('lineas', LineaController::class);
-
-    // Rutas para Modelo
     Route::resource('modelos', ModeloController::class);
-
-    // Rutas para Departamento
     Route::resource('departamentos', DepartamentoController::class);
-
-    // Rutas para Empresas
     Route::resource('empresas', EmpresaController::class);
+    Route::resource('clientes', ClienteController::class);
+    Route::resource('ventas', VentaController::class);
 });
 
 require __DIR__.'/auth.php';
