@@ -11,9 +11,23 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('control_de_mantos', function (Blueprint $table) {
-            $table->id();
+        Schema::create('control_de_manto', function (Blueprint $table) {
+            $table->id('id_control_manto');
+            $table->unsignedBigInteger('id_cliente');
+            $table->unsignedBigInteger('id_modelo');
+            $table->unsignedBigInteger('id_plan_manto');
+            $table->date('fecha_venta')->nullable();
+            $table->date('proximo_manto')->nullable();
+            $table->integer('contador');
             $table->timestamps();
+
+            // Unique constraint
+            $table->unique('id_control_manto');
+
+            // Foreign key constraints
+            $table->foreign('id_cliente')->references('id_cliente')->on('cliente');
+            $table->foreign('id_modelo')->references('id_modelo')->on('modelo');
+            $table->foreign('id_plan_manto')->references('id_plan_manto')->on('plan_manto');
         });
     }
 
@@ -22,6 +36,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('control_de_mantos');
+        Schema::dropIfExists('control_de_manto');
     }
 };
