@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class HistorialManto extends Model
 {
     use HasFactory;
+    protected $table = 'historial_manto';
 }
