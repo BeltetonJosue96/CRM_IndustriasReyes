@@ -11,9 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('estados', function (Blueprint $table) {
-            $table->id();
+        Schema::create('estado', function (Blueprint $table) {
+            $table->id('id_estado');
+            $table->string('estado', 45)->unique();
             $table->timestamps();
+
+            // Agregar índices únicos
+            $table->unique('id_estado');
+            $table->unique('estado');
         });
     }
 
@@ -22,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('estados');
+        Schema::dropIfExists('estado');
     }
 };

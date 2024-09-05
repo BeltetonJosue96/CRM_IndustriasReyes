@@ -11,6 +11,7 @@ use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PlanMantoController;
 use App\Http\Controllers\DetalleVentaController;
 use App\Http\Controllers\ChecklistController;
+use App\Http\Controllers\EstadoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -37,6 +38,7 @@ Route::middleware('auth')->group(function () {
     Route::resource('planes', PlanMantoController::class);
     Route::resource('detalle_ventas', DetalleVentaController::class);
     Route::resource('checklist', ChecklistController::class);
+    Route::resource('estados', EstadoController::class);
 
 });
 

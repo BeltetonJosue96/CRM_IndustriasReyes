@@ -12,7 +12,8 @@ class EstadoController extends Controller
      */
     public function index()
     {
-        //
+        $estados = Estado::all();
+        return view('estado.index', compact('estados'));
     }
 
     /**
@@ -20,7 +21,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        //
+        return view('estado.create');
     }
 
     /**
@@ -28,7 +29,14 @@ class EstadoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'estado' => 'required|string|max:45|unique:estado',
+        ]);
+
+        Estado::create($request->all());
+
+        return redirect()->route('estado.index')
+            ->with('success', 'Estado creado exitosamente.');
     }
 
     /**
@@ -36,7 +44,7 @@ class EstadoController extends Controller
      */
     public function show(Estado $estado)
     {
-        //
+        return view('estado.show', compact('estado'));
     }
 
     /**
@@ -44,7 +52,7 @@ class EstadoController extends Controller
      */
     public function edit(Estado $estado)
     {
-        //
+        return view('estado.edit', compact('estado'));
     }
 
     /**
@@ -52,7 +60,14 @@ class EstadoController extends Controller
      */
     public function update(Request $request, Estado $estado)
     {
-        //
+        $request->validate([
+            'estado' => 'required|string|max:45|unique:estado,estado,' . $estado->id_estado,
+        ]);
+
+        $estado->update($request->all());
+
+        return redirect()->route('estado.index')
+            ->with('success', 'Estado actualizado exitosamente.');
     }
 
     /**
@@ -60,6 +75,9 @@ class EstadoController extends Controller
      */
     public function destroy(Estado $estado)
     {
-        //
+        $estado->delete();
+
+        return redirect()->route('estado.index')
+            ->with('success', 'Estado eliminado exitosamente.');
     }
 }
