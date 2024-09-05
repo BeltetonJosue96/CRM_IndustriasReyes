@@ -10,6 +10,7 @@ use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PlanMantoController;
 use App\Http\Controllers\DetalleVentaController;
+use App\Http\Controllers\ChecklistController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -35,6 +36,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('ventas', VentaController::class);
     Route::resource('planes', PlanMantoController::class);
     Route::resource('detalle_ventas', DetalleVentaController::class);
+    Route::resource('checklist', ChecklistController::class);
+
 });
 
 require __DIR__.'/auth.php';

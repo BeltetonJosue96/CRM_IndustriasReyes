@@ -11,8 +11,24 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('checklists', function (Blueprint $table) {
-            $table->id();
+        Schema::create('checklist', function (Blueprint $table) {
+            $table->id('id_check');
+            $table->date('fecha_creacion');
+            $table->unsignedBigInteger('id_plan_manto');
+
+            // Claves únicas
+            $table->unique('id_check');
+
+            // Índices
+            $table->index('id_plan_manto', 'fk_checklist_plan_manto1_idx');
+
+            // Relaciones
+            $table->foreign('id_plan_manto')
+                ->references('id_plan_manto')
+                ->on('plan_manto')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
+
             $table->timestamps();
         });
     }
@@ -22,6 +38,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('checklists');
+        Schema::dropIfExists('checklist');
     }
 };

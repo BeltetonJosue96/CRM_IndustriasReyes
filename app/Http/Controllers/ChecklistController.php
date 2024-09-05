@@ -12,7 +12,8 @@ class ChecklistController extends Controller
      */
     public function index()
     {
-        //
+        $checklists = Checklist::all();
+        return view('checklist.index', compact('checklists'));
     }
 
     /**
@@ -20,7 +21,7 @@ class ChecklistController extends Controller
      */
     public function create()
     {
-        //
+        return view('checklist.create');
     }
 
     /**
@@ -28,7 +29,17 @@ class ChecklistController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $request->validate([
+            'fecha_creacion' => 'required|date',
+            'id_plan_manto' => 'required|exists:plan_manto,id_plan_manto',
+        ]);
+
+        Checklist::create([
+            'fecha_creacion' => $request->fecha_creacion,
+            'id_plan_manto' => $request->id_plan_manto,
+        ]);
+
+        return redirect()->route('checklist.index')->with('success', 'Checklist created successfully.');
     }
 
     /**
@@ -36,7 +47,7 @@ class ChecklistController extends Controller
      */
     public function show(Checklist $checklist)
     {
-        //
+        return view('checklist.show', compact('checklist'));
     }
 
     /**
@@ -44,7 +55,7 @@ class ChecklistController extends Controller
      */
     public function edit(Checklist $checklist)
     {
-        //
+        return view('checklist.edit', compact('checklist'));
     }
 
     /**
@@ -52,7 +63,17 @@ class ChecklistController extends Controller
      */
     public function update(Request $request, Checklist $checklist)
     {
-        //
+        $request->validate([
+            'fecha_creacion' => 'required|date',
+            'id_plan_manto' => 'required|exists:plan_manto,id_plan_manto',
+        ]);
+
+        $checklist->update([
+            'fecha_creacion' => $request->fecha_creacion,
+            'id_plan_manto' => $request->id_plan_manto,
+        ]);
+
+        return redirect()->route('checklist.index')->with('success', 'Checklist updated successfully.');
     }
 
     /**
@@ -60,6 +81,8 @@ class ChecklistController extends Controller
      */
     public function destroy(Checklist $checklist)
     {
-        //
+        $checklist->delete();
+
+        return redirect()->route('checklist.index')->with('success', 'Checklist deleted successfully.');
     }
 }
