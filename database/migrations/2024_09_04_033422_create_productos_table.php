@@ -12,12 +12,9 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('producto', function (Blueprint $table) {
-            $table->increments('id_producto'); // AUTO_INCREMENT primary key
+            $table->id('id_producto')->unique(); // AUTO_INCREMENT primary key
             $table->string('nombre', 75)->unique(); // VARCHAR(75) with UNIQUE constraint
             $table->timestamps();
-
-            // Additional constraints
-            $table->unique('id_producto'); // UNIQUE constraint on id_producto (though this is redundant with the primary key)
         });
     }
 

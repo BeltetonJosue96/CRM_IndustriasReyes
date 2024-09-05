@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('detalle_venta', function (Blueprint $table) {
-            $table->id('id_detalle');
+            $table->id('id_detalle')->unique();
             $table->decimal('costo', 10, 2);
             $table->unsignedBigInteger('id_venta');
             $table->unsignedBigInteger('id_plan_manto');
@@ -24,8 +24,6 @@ return new class extends Migration
             $table->foreign('id_plan_manto')->references('id_plan_manto')->on('plan_manto')->onDelete('cascade');
             $table->foreign('id_modelo')->references('id_modelo')->on('modelo')->onDelete('cascade');
 
-            // Unique Key Constraints
-            $table->unique('id_detalle');
         });
     }
 

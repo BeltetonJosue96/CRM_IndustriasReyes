@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('detalle_check', function (Blueprint $table) {
-            $table->id('id_detalle_check');
+            $table->id('id_detalle_check')->unique();
             $table->unsignedBigInteger('id_check');
             $table->unsignedBigInteger('id_control_manto');
             $table->date('fecha_manto')->nullable();
@@ -23,7 +23,6 @@ return new class extends Migration
             $table->foreign('id_control_manto')->references('id_control_manto')->on('control_de_manto')->onDelete('cascade');
             $table->foreign('id_estado')->references('id_estado')->on('estado')->onDelete('cascade');
 
-            $table->unique('id_detalle_check');
         });
     }
 

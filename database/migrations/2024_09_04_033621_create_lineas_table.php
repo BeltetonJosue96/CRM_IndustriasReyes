@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('linea', function (Blueprint $table) {
-            $table->id('id_linea'); // Auto-incremental primary key
+            $table->id('id_linea')->unique(); // Auto-incremental primary key
             $table->string('nombre', 100)->unique(); // Unique name
             $table->unsignedBigInteger('id_producto'); // Foreign key
 

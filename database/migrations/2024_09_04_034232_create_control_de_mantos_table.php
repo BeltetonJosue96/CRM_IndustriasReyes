@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('control_de_manto', function (Blueprint $table) {
-            $table->id('id_control_manto');
+            $table->id('id_control_manto')->unique();
             $table->unsignedBigInteger('id_cliente');
             $table->unsignedBigInteger('id_modelo');
             $table->unsignedBigInteger('id_plan_manto');
@@ -20,9 +20,6 @@ return new class extends Migration
             $table->date('proximo_manto')->nullable();
             $table->integer('contador');
             $table->timestamps();
-
-            // Unique constraint
-            $table->unique('id_control_manto');
 
             // Foreign key constraints
             $table->foreign('id_cliente')->references('id_cliente')->on('cliente');

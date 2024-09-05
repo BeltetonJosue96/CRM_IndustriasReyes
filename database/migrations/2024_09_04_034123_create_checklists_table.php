@@ -12,12 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('checklist', function (Blueprint $table) {
-            $table->id('id_check');
+            $table->id('id_check')->unique();
             $table->date('fecha_creacion');
             $table->unsignedBigInteger('id_plan_manto');
 
-            // Claves únicas
-            $table->unique('id_check');
+
 
             // Índices
             $table->index('id_plan_manto', 'fk_checklist_plan_manto1_idx');

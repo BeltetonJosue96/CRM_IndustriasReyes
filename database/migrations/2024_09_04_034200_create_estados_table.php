@@ -12,13 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('estado', function (Blueprint $table) {
-            $table->id('id_estado');
+            $table->id('id_estado')->unique();
             $table->string('estado', 45)->unique();
             $table->timestamps();
 
-            // Agregar índices únicos
-            $table->unique('id_estado');
-            $table->unique('estado');
         });
     }
 

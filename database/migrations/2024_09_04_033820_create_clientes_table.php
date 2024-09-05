@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cliente', function (Blueprint $table) {
-            $table->id('id_cliente');
+            $table->id('id_cliente')->unique();
             $table->string('nombre', 145);
             $table->string('apellidos', 145);
             $table->string('identificacion', 25)->unique();
@@ -33,8 +33,6 @@ return new class extends Migration
                 ->references('id_departamento')
                 ->on('departamento')
                 ->onDelete('cascade');
-
-            $table->unique('id_cliente');
             $table->timestamps();
         });
     }

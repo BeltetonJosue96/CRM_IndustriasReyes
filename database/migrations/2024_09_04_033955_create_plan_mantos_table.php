@@ -12,15 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('plan_manto', function (Blueprint $table) {
-            $table->id('id_plan_manto');
+            $table->id('id_plan_manto')->unique();
             $table->string('nombre', 25)->unique();
             $table->string('descripcion', 45)->unique();
             $table->integer('frecuencia_mes');
             $table->timestamps();
 
-            // Add unique constraints
-            $table->unique('nombre');
-            $table->unique('descripcion');
         });
     }
 

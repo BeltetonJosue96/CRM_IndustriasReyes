@@ -12,11 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('modelo', function (Blueprint $table) {
-            $table->id('id_modelo'); // AUTO_INCREMENT id
+            $table->id('id_modelo')->unique(); // AUTO_INCREMENT id
             $table->string('codigo', 45)->unique(); // Unique key on 'codigo'
             $table->string('descripcion', 45);
             $table->unsignedBigInteger('id_linea'); // Foreign key
-            $table->primary('id_modelo'); // Primary key
+
             $table->foreign('id_linea')->references('id_linea')->on('linea')
                 ->onDelete('cascade'); // Foreign key constraint
             $table->timestamps();
