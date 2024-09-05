@@ -11,9 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('detalle_checks', function (Blueprint $table) {
-            $table->id();
-            $table->timestamps();
+        Schema::create('detalle_check', function (Blueprint $table) {
+            $table->id('id_detalle_check');
+            $table->unsignedBigInteger('id_check');
+            $table->unsignedBigInteger('id_control_manto');
+            $table->date('fecha_manto')->nullable();
+            $table->unsignedBigInteger('id_estado');
+            $table->string('observaciones', 245)->nullable();
+
+            $table->foreign('id_check')->references('id_check')->on('checklist')->onDelete('cascade');
+            $table->foreign('id_control_manto')->references('id_control_manto')->on('control_de_manto')->onDelete('cascade');
+            $table->foreign('id_estado')->references('id_estado')->on('estado')->onDelete('cascade');
+
+            $table->unique('id_detalle_check');
         });
     }
 
@@ -22,6 +32,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('detalle_checks');
+        Schema::dropIfExists('detalle_check');
     }
 };

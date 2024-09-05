@@ -12,7 +12,8 @@ class DetalleCheckController extends Controller
      */
     public function index()
     {
-        //
+        $detallesCheck = DetalleCheck::all();
+        return view('detalle_check.index', compact('detallesCheck'));
     }
 
     /**
@@ -20,7 +21,7 @@ class DetalleCheckController extends Controller
      */
     public function create()
     {
-        //
+        return view('detalle_check.create');
     }
 
     /**
@@ -28,7 +29,17 @@ class DetalleCheckController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            'id_check' => 'required|exists:checklist,id_check',
+            'id_control_manto' => 'required|exists:control_de_manto,id_control_manto',
+            'fecha_manto' => 'nullable|date',
+            'id_estado' => 'required|exists:estado,id_estado',
+            'observaciones' => 'nullable|string|max:245',
+        ]);
+
+        $detalleCheck = DetalleCheck::create($validatedData);
+
+        return redirect()->route('detalle_check.index')->with('success', 'Detalle de check creado correctamente.');
     }
 
     /**
@@ -36,7 +47,7 @@ class DetalleCheckController extends Controller
      */
     public function show(DetalleCheck $detalleCheck)
     {
-        //
+        return view('detalle_check.show', compact('detalleCheck'));
     }
 
     /**
@@ -44,7 +55,7 @@ class DetalleCheckController extends Controller
      */
     public function edit(DetalleCheck $detalleCheck)
     {
-        //
+        return view('detalle_check.edit', compact('detalleCheck'));
     }
 
     /**
@@ -52,7 +63,17 @@ class DetalleCheckController extends Controller
      */
     public function update(Request $request, DetalleCheck $detalleCheck)
     {
-        //
+        $validatedData = $request->validate([
+            'id_check' => 'required|exists:checklist,id_check',
+            'id_control_manto' => 'required|exists:control_de_manto,id_control_manto',
+            'fecha_manto' => 'nullable|date',
+            'id_estado' => 'required|exists:estado,id_estado',
+            'observaciones' => 'nullable|string|max:245',
+        ]);
+
+        $detalleCheck->update($validatedData);
+
+        return redirect()->route('detalle_check.index')->with('success', 'Detalle de check actualizado correctamente.');
     }
 
     /**
@@ -60,6 +81,8 @@ class DetalleCheckController extends Controller
      */
     public function destroy(DetalleCheck $detalleCheck)
     {
-        //
+        $detalleCheck->delete();
+
+        return redirect()->route('detalle_check.index')->with('success', 'Detalle de check eliminado correctamente.');
     }
 }

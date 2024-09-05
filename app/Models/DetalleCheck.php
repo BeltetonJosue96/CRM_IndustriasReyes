@@ -8,4 +8,5 @@ use Illuminate\Database\Eloquent\Model;
 class DetalleCheck extends Model
 {
     use HasFactory;
+    protected $table = 'detalle_check';
 }

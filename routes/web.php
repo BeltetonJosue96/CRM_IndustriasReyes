@@ -13,6 +13,8 @@ use App\Http\Controllers\DetalleVentaController;
 use App\Http\Controllers\ChecklistController;
 use App\Http\Controllers\EstadoController;
 use App\Http\Controllers\ControlDeMantoController;
+use App\Http\Controllers\DetalleCheckController;
+use App\Http\Controllers\HistorialMantoController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -41,7 +43,8 @@ Route::middleware('auth')->group(function () {
     Route::resource('checklist', ChecklistController::class);
     Route::resource('estados', EstadoController::class);
     Route::resource('controlmantos', ControlDeMantoController::class);
-
+    Route::resource('detallecheck', DetalleCheckController::class);
+    Route::resource('historial', HistorialMantoController::class);
 });
 
 require __DIR__.'/auth.php';
