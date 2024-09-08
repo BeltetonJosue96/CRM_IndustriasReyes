@@ -28,25 +28,26 @@
                                 }
                             }, 5000);
                         </script>
-                        <form action="{{ route('productos.update', $producto->id_producto) }}" method="POST">
-                                @csrf
-                                @method('PUT')
-                                <div class="mb-4">
-                                    <label for="id_producto" class="block md:text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('ID del Producto') }}</label>
-                                    <input type="text" name="id_producto" id="id_producto" value="PROD10{{ $producto->id_producto }}"
-                                           class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" readonly>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="nombre" class="block md:text-sm font-medium text-gray-700 dark:text-gray-300 mt-6">{{ __('Nombre del Producto') }}</label>
-                                    <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $producto->nombre) }}"
-                                           class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
-                                </div>
-                                <div class="flex justify-center">
-                                    <x-primary-button>
-                                        {{ __('Actualizar') }}
-                                    </x-primary-button>
-                                </div>
-                            </form>
+                        <form action="{{ route('productos.update', $producto->hashed_id) }}" method="POST">
+                            @csrf
+                            @method('PUT')
+                            <div class="mb-4">
+                                <label for="id_producto" class="block md:text-sm font-medium text-gray-700 dark:text-gray-300">{{ __('ID Seguro') }}</label>
+                                <input type="text" name="id_producto" id="id_producto" value="{{ $producto->hashed_id }}"
+                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 text-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm" readonly>
+                            </div>
+                            <div class="mb-4">
+                                <label for="nombre" class="block md:text-sm font-medium text-gray-700 dark:text-gray-300 mt-6">{{ __('Nombre del Producto') }}</label>
+                                <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $producto->nombre) }}"
+                                       class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
+                            </div>
+                            <div class="flex justify-center">
+                                <x-primary-button>
+                                    {{ __('Actualizar') }}
+                                </x-primary-button>
+                            </div>
+                        </form>
+
                         <div class="flex justify-center mt-6">
                             <a href="{{ route('productos.index') }}">
                                 <x-danger-button>

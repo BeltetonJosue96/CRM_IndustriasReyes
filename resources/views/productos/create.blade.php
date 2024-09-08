@@ -11,7 +11,6 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="container mx-auto mt-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
                         <h3 class="text-xl text-center font-semibold text-gray-800 dark:text-gray-200 mb-6">Registrar Nuevo Producto</h3>
-
                         @if ($errors->any())
                             <div id="error-messages" class="text-black dark:text-gray-200 rounded-lg p-4 mb-4">
                                 <ul class="text-center">
@@ -21,7 +20,6 @@
                                 </ul>
                             </div>
                         @endif
-
                         <script>
                             setTimeout(function() {
                                 var errorMessages = document.getElementById('error-messages');
@@ -30,7 +28,6 @@
                                 }
                             }, 5000);
                         </script>
-
                         @if (session('success'))
                             <div class="px-4 py-3 rounded mb-4">
                                 {{ session('success') }}

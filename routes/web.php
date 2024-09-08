@@ -37,7 +37,9 @@ Route::middleware('auth')->group(function () {
     Route::post('register', [RegisteredUserController::class, 'store']);
 
     // Rutas para Modulos
-    Route::resource('productos', ProductoController::class);
+    Route::resource('productos', ProductoController::class)->parameters([
+        'productos' => 'hashedId'
+    ]);
     Route::resource('lineas', LineaController::class);
     Route::resource('modelos', ModeloController::class);
     Route::resource('departamentos', DepartamentoController::class);
