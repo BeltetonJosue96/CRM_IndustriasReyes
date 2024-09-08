@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Producto;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class ProductoController extends Controller
 {
@@ -39,17 +41,22 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validar y guardar un nuevo producto
         $request->validate([
-            'nombre' => 'required|unique:producto|max:75',
+            'nombre' => 'required|string|max:75|unique:producto,nombre',
+        ], [
+            'nombre.unique' => 'El nombre del producto ya existe. Por favor, elige otro nombre.',
         ]);
+        $currentDateTime = Carbon::now('America/Guatemala');
 
-        $producto = new Producto();
-        $producto->nombre = $request->nombre;
-        $producto->save();
+        DB::table('producto')->insert([
+            'nombre' => $request->nombre,
+            'created_at' => $currentDateTime,
+            'updated_at' => $currentDateTime,
+        ]);
 
         return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
     }
+
 
     /**
      * Display the specified resource.
