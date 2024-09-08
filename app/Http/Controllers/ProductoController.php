@@ -10,10 +10,18 @@ class ProductoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        // Obtener todos los productos
-        $productos = Producto::all();
+        $query = Producto::query();
+
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where('nombre', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('id_producto', 'LIKE', "%{$searchTerm}%");
+        }
+
+        $productos = $query->paginate(10);
+
         return view('productos.index', compact('productos'));
     }
 
