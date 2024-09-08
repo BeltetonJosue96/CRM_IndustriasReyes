@@ -10,9 +10,15 @@ class EstadoController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $estados = Estado::all();
+        $query = Estado::query();
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where('estado', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('estado', 'LIKE', "%{$searchTerm}%");
+        }
+        $estados = $query->paginate(10);
         return view('estado.index', compact('estados'));
     }
 

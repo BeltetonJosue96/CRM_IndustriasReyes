@@ -24,7 +24,7 @@
                             </x-primary-button>
                         </form>
                     </div>
-                @if($productos->isEmpty())
+                    @if($productos->isEmpty())
                         <p class="text-center text-gray-500 dark:text-gray-400">Sin coincidencias, no hay productos disponibles en este momento.</p>
                     @else
                         <div class="mt-6 relative flex flex-col w-full h-full overflow-scroll text-gray-700 bg-white shadow-md rounded-xl bg-clip-border">

@@ -47,6 +47,12 @@
                                 Planes de Mantenimiento
                             </span>
                         </a>
+                        <a href="{{ route('planes.index') }}" class="box-border h-40 w-40 p-4 border-4 flex flex-col items-center justify-center">
+                            <img src="https://cdn-icons-png.freepik.com/256/3315/3315581.png" alt="Configuracion" class="w-20 h-20 mr-2">
+                            <span class="text-center text-xl font-semibold text-gray-800 dark:text-gray-200">
+                                Configuración
+                            </span>
+                        </a>
                     </div>
                 </div>
             </div>
