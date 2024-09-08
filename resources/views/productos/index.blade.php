@@ -41,7 +41,7 @@
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach ($productos as $producto)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <td class="px-6 py-4 border-b border-blue-gray-50 whitespace-nowrap text-center md:text-sm text-gray-900 dark:text-white">PROD0{{ $producto->id_producto }}</td>
+                                        <td class="px-6 py-4 border-b border-blue-gray-50 whitespace-nowrap text-center md:text-sm text-gray-900 dark:text-white">PROD10{{ $producto->id_producto }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap md:text-sm text-gray-900 dark:text-white">{{ $producto->nombre }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap text-center md:text-sm text-gray-500 dark:text-gray-300">{{ $producto->created_at->format('d/m/Y') }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap text-center md:text-sm text-gray-500 dark:text-gray-300">{{ $producto->updated_at->format('d/m/Y') }}</td>

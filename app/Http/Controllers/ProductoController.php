@@ -15,15 +15,12 @@ class ProductoController extends Controller
     public function index(Request $request)
     {
         $query = Producto::query();
-
         if ($request->has('search')) {
             $searchTerm = $request->search;
             $query->where('nombre', 'LIKE', "%{$searchTerm}%")
                 ->orWhere('id_producto', 'LIKE', "%{$searchTerm}%");
         }
-
         $productos = $query->paginate(10);
-
         return view('productos.index', compact('productos'));
     }
 
@@ -32,7 +29,6 @@ class ProductoController extends Controller
      */
     public function create()
     {
-        // Mostrar formulario para crear un nuevo producto
         return view('productos.create');
     }
 
@@ -47,13 +43,11 @@ class ProductoController extends Controller
             'nombre.unique' => 'El nombre del producto ya existe. Por favor, elige otro nombre.',
         ]);
         $currentDateTime = Carbon::now('America/Guatemala');
-
         DB::table('producto')->insert([
             'nombre' => $request->nombre,
             'created_at' => $currentDateTime,
             'updated_at' => $currentDateTime,
         ]);
-
         return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
     }
 
@@ -63,33 +57,37 @@ class ProductoController extends Controller
      */
     public function show(Producto $producto)
     {
-        // Mostrar un producto específico
         return view('productos.show', compact('producto'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Producto $producto)
+    public function edit($id_producto)
     {
-        // Mostrar formulario para editar un producto
+        $producto = Producto::findOrFail($id_producto);
+
         return view('productos.edit', compact('producto'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Producto $producto)
+    public function update(Request $request, $id_producto)
     {
-        // Validar y actualizar un producto existente
         $request->validate([
-            'nombre' => 'required|unique:producto,nombre,' . $producto->id_producto . '|max:75',
+            'nombre' => 'required|string|max:75|unique:producto,nombre',
+        ], [
+            'nombre.unique' => 'El nombre del producto ya existe. Por favor, elige otro nombre.',
         ]);
+        $currentDateTime = Carbon::now('America/Guatemala');
 
-        $producto->nombre = $request->nombre;
+        $producto = Producto::findOrFail($id_producto);
+        $producto->nombre = $request->input('nombre');
+        $producto->updated_at = $currentDateTime;
         $producto->save();
 
-        return redirect()->route('productos.index')->with('success', 'Producto actualizado exitosamente.');
+        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
     }
 
     /**
@@ -97,9 +95,7 @@ class ProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
-        // Eliminar un producto
         $producto->delete();
-
         return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente.');
     }
 }
