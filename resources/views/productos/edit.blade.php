@@ -43,7 +43,7 @@
                             </div>
                             <div class="flex justify-center">
                                 <x-primary-button>
-                                    {{ __('Actualizar') }}
+                                    {{ __('Modificar') }}
                                 </x-primary-button>
                             </div>
                         </form>

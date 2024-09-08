@@ -33,7 +33,7 @@
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Producto</th>
                                     <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Creación</th>
-                                    <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Actualización</th>
+                                    <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Última modificación</th>
                                     <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Acciones</th>
                                 </tr>
                                 </thead>
