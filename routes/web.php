@@ -59,6 +59,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('controlmantos', ControlDeMantoController::class);
     Route::resource('detallecheck', DetalleCheckController::class);
     Route::resource('historial', HistorialMantoController::class);
+    Route::get('/config', function () {
+        return view('config');
+    })->name('config');
 });
 
 require __DIR__.'/auth.php';

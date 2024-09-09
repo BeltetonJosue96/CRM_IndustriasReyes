@@ -35,19 +35,7 @@
                                 Reportes
                             </span>
                         </a>
-                        <a href="{{ route('productos.index') }}" class="box-border h-40 w-40 p-4 border-4 flex flex-col items-center justify-center">
-                            <img src="https://cdn-icons-png.freepik.com/256/2702/2702154.png" alt="Productos" class="w-20 h-20 mr-2">
-                            <span class="text-center text-xl font-semibold text-gray-800 dark:text-gray-200">
-                                Catálogo de Productos
-                            </span>
-                        </a>
-                        <a href="{{ route('planes.index') }}" class="box-border h-40 w-40 p-4 border-4 flex flex-col items-center justify-center">
-                            <img src="https://cdn-icons-png.freepik.com/256/4233/4233834.png" alt="Productos" class="w-20 h-20 mr-2">
-                            <span class="text-center text-xl font-semibold text-gray-800 dark:text-gray-200">
-                                Planes de Mantenimiento
-                            </span>
-                        </a>
-                        <a href="{{ route('planes.index') }}" class="box-border h-40 w-40 p-4 border-4 flex flex-col items-center justify-center">
+                        <a href="{{ route('config') }}" class="box-border h-40 w-40 p-4 border-4 flex flex-col items-center justify-center">
                             <img src="https://cdn-icons-png.freepik.com/256/3315/3315581.png" alt="Configuracion" class="w-20 h-20 mr-2">
                             <span class="text-center text-xl font-semibold text-gray-800 dark:text-gray-200">
                                 Configuración
