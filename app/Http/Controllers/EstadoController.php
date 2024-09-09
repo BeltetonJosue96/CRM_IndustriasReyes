@@ -40,7 +40,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        return view('estados.create');
+        return view('estado.create');
     }
 
     /**
