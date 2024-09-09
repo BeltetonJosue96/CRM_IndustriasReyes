@@ -32,28 +32,26 @@
                             <table class="w-full table-auto min-w-max divide-y divide-gray-200 dark:divide-gray-700">
                                 <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
-                                    <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">ID</th>
                                     <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Estado</th>
                                     <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Creación</th>
-                                    <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Actualización</th>
+                                    <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Última modificación</th>
                                     <th scope="col" class="px-6 py-3 text-center md:text-sm text-gray-50 dark:text-gray-300 uppercase tracking-wider">Acciones</th>
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach ($estados as $estado)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <td class="px-6 py-4 border-b border-blue-gray-50 whitespace-nowrap text-center md:text-sm text-gray-900 dark:text-white">STATUS0{{ $estado->id_estado }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap md:text-sm text-gray-900 dark:text-white">{{ $estado->estado }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap text-center md:text-sm text-gray-500 dark:text-gray-300">{{ $estado->created_at->format('d/m/Y') }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap text-center md:text-sm text-gray-500 dark:text-gray-300">{{ $estado->updated_at->format('d/m/Y') }}</td>
                                         <td class="px-6 border-b border-blue-gray-50 py-4 whitespace-nowrap text-center text-gray-500 dark:text-gray-300">
                                             <div class="flex justify-center items-center">
-                                                <a href="{{ route('estados.edit', $estado->id_estado) }}" class="py-2 px-4 rounded mr-2">
+                                                <a href="{{ route('estados.edit', $estado->hashed_id ) }}" class="py-2 px-4 rounded mr-2">
                                                     <x-primary-button>
                                                         {{ __('Modificar') }}
                                                     </x-primary-button>
                                                 </a>
-                                                <form action="{{ route('estados.destroy', $estado->id_estado) }}" method="POST" class="inline">
+                                                <form action="{{ route('estados.destroy', $estado->hashed_id ) }}" method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
                                                     <x-danger-button onclick="return confirm('¿Estás seguro de que quieres eliminar este {{ __('estado') }}?')">

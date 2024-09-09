@@ -4,21 +4,34 @@ namespace App\Http\Controllers;
 
 use App\Models\Estado;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Hashids\Hashids;
 
 class EstadoController extends Controller
 {
+    protected $hashids;
     /**
      * Display a listing of the resource.
      */
+    public function __construct()
+    {
+        $this->hashids = new Hashids(env('APP_KEY'), 10);
+    }
     public function index(Request $request)
     {
         $query = Estado::query();
         if ($request->has('search')) {
             $searchTerm = $request->search;
             $query->where('estado', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('estado', 'LIKE', "%{$searchTerm}%");
+                ->orWhere('id_estado', 'LIKE', "%{$searchTerm}%");
         }
         $estados = $query->paginate(10);
+
+        $estados->getCollection()->transform(function ($estado) {
+            $estado->hashed_id = $this->hashids->encode($estado->id_estado);
+            return $estado;
+        });
         return view('estado.index', compact('estados'));
     }
 
@@ -27,7 +40,7 @@ class EstadoController extends Controller
      */
     public function create()
     {
-        return view('estado.create');
+        return view('estados.create');
     }
 
     /**
@@ -38,52 +51,85 @@ class EstadoController extends Controller
         $request->validate([
             'estado' => 'required|string|max:45|unique:estado',
         ]);
-
-        Estado::create($request->all());
-
-        return redirect()->route('estado.index')
+        $request->validate([
+            'estado' => 'required|string|max:45|unique:estado,estado',
+        ], [
+            'estado.unique' => 'El tipo de estado ya existe. Por favor, elige otro tipo de estado.',
+        ]);
+        $currentDateTime = Carbon::now('America/Guatemala');
+        $estado = DB::table('estado')->insertGetId([
+            'estado' => $request->estado,
+            'created_at' => $currentDateTime,
+            'updated_at' => $currentDateTime,
+        ]);
+        return redirect()->route('estados.index')
             ->with('success', 'Estado creado exitosamente.');
     }
 
     /**
      * Display the specified resource.
      */
-    public function show(Estado $estado)
+    public function show($hashedId)
     {
-        return view('estado.show', compact('estado'));
+        $id = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id) {
+            abort(404);
+        }
+        $estado = Estado::findOrFail($id);
+        return view('estados.show', compact('estado'));
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Estado $estado)
+    public function edit($hashedId)
     {
+        $id_estado = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_estado) {
+            abort(404);
+        }
+        $estado = Estado::findOrFail($id_estado);
+        $estado->hashed_id = $hashedId;
         return view('estado.edit', compact('estado'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Estado $estado)
+    public function update(Request $request, $hashedId)
     {
+        $id_estado = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_estado) {
+            abort(404);
+        }
+        $estado = Estado::findOrFail($id_estado);
         $request->validate([
-            'estado' => 'required|string|max:45|unique:estado,estado,' . $estado->id_estado,
+            'estado' => 'required|string|max:45|unique:estado,estado,' . $estado->id_estado . ',id_estado',
+        ], [
+            'estado.unique' => 'El tipo de estado ya existe. Por favor, elige otro tipo de estado.',
         ]);
+        $currentDateTime = Carbon::now('America/Guatemala');
+        $estado->estado = $request->input('estado');
+        $estado->updated_at = $currentDateTime;
+        $estado->save();
 
-        $estado->update($request->all());
-
-        return redirect()->route('estado.index')
+        return redirect()->route('estados.index')
             ->with('success', 'Estado actualizado exitosamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Estado $estado)
+    public function destroy($hashedId)
     {
+        $id = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id) {
+            abort(404);
+        }
+        $estado = Estado::findOrFail($id);
         $estado->delete();
 
-        return redirect()->route('estado.index')
+        return redirect()->route('estados.index')
             ->with('success', 'Estado eliminado exitosamente.');
     }
 }

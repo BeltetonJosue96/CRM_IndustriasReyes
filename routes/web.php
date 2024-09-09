@@ -49,7 +49,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('planes', PlanMantoController::class);
     Route::resource('detalle_ventas', DetalleVentaController::class);
     Route::resource('checklist', ChecklistController::class);
-    Route::resource('estados', EstadoController::class);
+    Route::resource('estados', EstadoController::class)->parameters([
+        'estados' => 'hashedId'
+    ]);
     Route::resource('controlmantos', ControlDeMantoController::class);
     Route::resource('detallecheck', DetalleCheckController::class);
     Route::resource('historial', HistorialMantoController::class);
