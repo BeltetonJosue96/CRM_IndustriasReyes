@@ -45,7 +45,9 @@ Route::middleware('auth')->group(function () {
     Route::resource('departamentos', DepartamentoController::class)->parameters([
         'departamentos' => 'hashedId'
     ]);
-    Route::resource('empresas', EmpresaController::class);
+    Route::resource('empresas', EmpresaController::class)->parameters([
+        'empresas' => 'hashedId'
+    ]);
     Route::resource('clientes', ClienteController::class);
     Route::resource('ventas', VentaController::class);
     Route::resource('planes', PlanMantoController::class);

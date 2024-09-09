@@ -4,15 +4,39 @@ namespace App\Http\Controllers;
 
 use App\Models\Empresa;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Hashids\Hashids;
 
 class EmpresaController extends Controller
 {
+    protected $hashids;
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function __construct()
     {
-        $empresas = Empresa::all();
+        $this->hashids = new Hashids(env('APP_KEY'), 10);
+    }
+    public function index(Request $request)
+    {
+        // Inicia la consulta de productos
+        $query = Empresa::query();
+        // Si se incluye un término de búsqueda, se filtra por nombre o ID del producto
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where('nombre', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('id_empresa', 'LIKE', "%{$searchTerm}%");
+        }
+        // Se obtienen los productos paginados (10 por página)
+        $empresas = $query->paginate(10);
+
+        // Codifica los IDs de los productos antes de enviarlos a la vista
+        $empresas->getCollection()->transform(function ($empresa) {
+            $empresa->hashed_id = $this->hashids->encode($empresa->id_empresa);
+            return $empresa;
+        });
+        // Retorna la vista 'producto.index' con los productos codificados
         return view('empresas.index', compact('empresas'));
     }
 
@@ -29,14 +53,22 @@ class EmpresaController extends Controller
      */
     public function store(Request $request)
     {
+        //Se valida que el campo cumpla con los requsitos
         $request->validate([
-            'nombre' => 'required | unique:empresas | max:75',
+            'nombre' => 'required|string|max:75|unique:empresa,nombre',
+        ], [
+            'nombre.unique' => 'El nombre de la empresa ya existe. Por favor, elige otro nombre.',
         ]);
-        $empresa = new Empresa();
-        $empresa->nombre = $request->nombre;
-        $empresa->save();
+        //Se establece la fecha y hora de Guatemala para los campos dateTime
+        $currentDateTime = Carbon::now('America/Guatemala');
 
-        return redirect()->route('empresas.index')->with('success', 'Empresa registrada correctamente');
+        $producto = DB::table('empresa')->insertGetId([
+            'nombre' => $request->nombre,
+            'created_at' => $currentDateTime,
+            'updated_at' => $currentDateTime,
+        ]);
+        //Se retorna la vista Index y se cargan todos los podructos.
+        return redirect()->route('empresas.index')->with('success', 'Empresa creada exitosamente.');
     }
 
     /**
@@ -50,30 +82,55 @@ class EmpresaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Empresa $empresa)
+    public function edit($hashedId)
     {
+        //Se decodifica el ID encriptado
+        $id_empresa = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_empresa) {
+            abort(404);
+        }
+        //Se busca el ID en la tabla para validar
+        $empresa = Empresa::findOrFail($id_empresa);
+        $empresa->hashed_id = $hashedId; // Usamos el hashed_id directamente nuevamente
         return view('empresas.edit', compact('empresa'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Empresa $empresa)
+    public function update(Request $request, $hashedId)
     {
+        //Se decodifica el ID encriptado
+        $id_empresa = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_empresa) {
+            abort(404);
+        }
+        $empresa = Empresa::findOrFail($id_empresa);
         $request->validate([
-            'nombre' => 'required | unique:empresas '. $empresa->id_empresa . ' | max:75',
+            'nombre' => 'required|string|max:75|unique:empresa,nombre,' . $empresa->id_empresa . ',id_empresa',
+        ], [
+            'nombre.unique' => 'El nombre de la empresa ya existe. Por favor, elige otro nombre.',
         ]);
-        $empresa->nombre = $request->nombre;
+        $currentDateTime = Carbon::now('America/Guatemala');
+        $empresa->nombre = $request->input('nombre');
+        $empresa->updated_at = $currentDateTime;
         $empresa->save();
-        return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente');
+
+        return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente.');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Empresa $empresa)
+    public function destroy($hashedId)
     {
+        //Se decodifica el ID encriptado
+        $id = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id) {
+            abort(404);
+        }
+        $empresa = Empresa::findOrFail($id);
         $empresa->delete();
-        return redirect()->route('empresas.index')->with('success', 'Empresa eliminada correctamente');
+        return redirect()->route('empresas.index')->with('success', 'Empresa eliminada exitosamente.');
     }
 }
