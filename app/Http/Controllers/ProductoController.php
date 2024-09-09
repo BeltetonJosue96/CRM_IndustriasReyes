@@ -7,14 +7,21 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Hashids\Hashids;
-
+/**
+ * Controlador para la gestión de productos.
+ * Este controlador maneja la creación, actualización, listado y eliminación de productos.
+ */
 class ProductoController extends Controller
 {
+    // Variable protegida para manejar Hashids, utilizada para codificar/decodificar los IDs de los productos.
     protected $hashids;
-
+    /**
+     * Constructor del controlador.
+     * Inicializa Hashids con una salida única y una longitud mínima de hash de 10 caracteres.
+     * Esto permite que los IDs de los productos sean codificados antes de ser enviados al frontend.
+     */
     public function __construct()
     {
-        // Inicializamos Hashids con una sal única y una longitud mínima de hash
         $this->hashids = new Hashids(env('APP_KEY'), 10);
     }
 
@@ -23,20 +30,23 @@ class ProductoController extends Controller
      */
     public function index(Request $request)
     {
+        // Inicia la consulta de productos
         $query = Producto::query();
+        // Si se incluye un término de búsqueda, se filtra por nombre o ID del producto
         if ($request->has('search')) {
             $searchTerm = $request->search;
             $query->where('nombre', 'LIKE', "%{$searchTerm}%")
                 ->orWhere('id_producto', 'LIKE', "%{$searchTerm}%");
         }
+        // Se obtienen los productos paginados (10 por página)
         $productos = $query->paginate(10);
 
-        // Codificamos los IDs antes de pasarlos a la vista
+        // Codifica los IDs de los productos antes de enviarlos a la vista
         $productos->getCollection()->transform(function ($producto) {
             $producto->hashed_id = $this->hashids->encode($producto->id_producto);
             return $producto;
         });
-
+        // Retorna la vista 'producto.index' con los productos codificados
         return view('productos.index', compact('productos'));
     }
 
@@ -53,17 +63,21 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
+        //Se valida que el campo cumpla con los requsitos
         $request->validate([
             'nombre' => 'required|string|max:75|unique:producto,nombre',
         ], [
             'nombre.unique' => 'El nombre del producto ya existe. Por favor, elige otro nombre.',
         ]);
+        //Se establece la fecha y hora de Guatemala para los campos dateTime
         $currentDateTime = Carbon::now('America/Guatemala');
+
         $producto = DB::table('producto')->insertGetId([
             'nombre' => $request->nombre,
             'created_at' => $currentDateTime,
             'updated_at' => $currentDateTime,
         ]);
+        //Se retorna la vista Index y se cargan todos los podructos.
         return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
     }
 
@@ -85,12 +99,14 @@ class ProductoController extends Controller
      */
     public function edit($hashedId)
     {
+        //Se decodifica el ID encriptado
         $id_producto = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_producto) {
             abort(404);
         }
+        //Se busca el ID en la tabla para validar
         $producto = Producto::findOrFail($id_producto);
-        $producto->hashed_id = $hashedId; // Usamos el hashed_id directamente
+        $producto->hashed_id = $hashedId; // Usamos el hashed_id directamente nuevamente
         return view('productos.edit', compact('producto'));
     }
     /**
@@ -98,6 +114,7 @@ class ProductoController extends Controller
      */
     public function update(Request $request, $hashedId)
     {
+        //Se decodifica el ID encriptado
         $id_producto = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_producto) {
             abort(404);
@@ -120,6 +137,7 @@ class ProductoController extends Controller
      */
     public function destroy($hashedId)
     {
+        //Se decodifica el ID encriptado
         $id = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id) {
             abort(404);
