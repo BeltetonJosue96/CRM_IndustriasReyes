@@ -9,8 +9,7 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <div class="container mx-auto mt-8 bg-white dark:bg-gray-900 p-6 rounded-lg shadow-md">
-                        <h3 class="text-xl font-semibold mb-6 text-gray-900 dark:text-white text-center">{{ __('Editar Producto') }}</h3>
+                        <h2 class="text-xl text-center font-semibold text-gray-800 dark:text-gray-200 mb-6">{{ __('Editar Producto') }}</h2>
                         @if ($errors->any())
                             <div id="error-messages" class="text-black dark:text-gray-200 rounded-lg p-4 mb-4">
                                 <ul class="text-center">
@@ -55,8 +54,6 @@
                                 </x-danger-button>
                             </a>
                         </div>
-
-                    </div>
                 </div>
             </div>
         </div>
