@@ -42,7 +42,9 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::resource('lineas', LineaController::class);
     Route::resource('modelos', ModeloController::class);
-    Route::resource('departamentos', DepartamentoController::class);
+    Route::resource('departamentos', DepartamentoController::class)->parameters([
+        'departamentos' => 'hashedId'
+    ]);
     Route::resource('empresas', EmpresaController::class);
     Route::resource('clientes', ClienteController::class);
     Route::resource('ventas', VentaController::class);
