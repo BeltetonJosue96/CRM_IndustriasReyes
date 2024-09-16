@@ -16,6 +16,11 @@
                                 <x-primary-button class="ms-3">
                                     {{ __('Agregar nuevo departamento') }}
                                 </x-primary-button>
+                                <a href="{{ route('config') }}">
+                                    <x-danger-button class="ms-3">
+                                        {{ __('Regresar') }}
+                                    </x-danger-button>
+                                </a>
                             </a>
                             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Departamentos registrados</h2>
                         </div>

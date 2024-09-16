@@ -17,6 +17,11 @@
                                     {{ __('Agregar nuevo estado') }}
                                 </x-primary-button>
                             </a>
+                            <a href="{{ route('config') }}">
+                                <x-danger-button class="ms-3">
+                                    {{ __('Regresar') }}
+                                </x-danger-button>
+                            </a>
                             <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Productos registrados</h2>
                         </div>
                         <!-- Cuadro de búsqueda centrado -->
