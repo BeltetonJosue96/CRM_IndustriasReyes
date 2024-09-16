@@ -77,7 +77,7 @@ class ProductoController extends Controller
             'created_at' => $currentDateTime,
             'updated_at' => $currentDateTime,
         ]);
-        //Se retorna la vista Index y se cargan todos los podructos.
+        //Se retorna la vista Index y se cargan todos los productos.
         return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
     }
 
