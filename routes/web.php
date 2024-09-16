@@ -50,7 +50,9 @@ Route::middleware('auth')->group(function () {
     ]);
     Route::resource('clientes', ClienteController::class);
     Route::resource('ventas', VentaController::class);
-    Route::resource('planes', PlanMantoController::class);
+    Route::resource('planes', PlanMantoController::class)->parameters([
+        'planes' => 'hashedId'
+    ]);
     Route::resource('detalle_ventas', DetalleVentaController::class);
     Route::resource('checklist', ChecklistController::class);
     Route::resource('estados', EstadoController::class)->parameters([
