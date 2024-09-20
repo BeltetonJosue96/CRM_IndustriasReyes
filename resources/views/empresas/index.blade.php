@@ -17,6 +17,11 @@
                                     {{ __('Agregar nueva empresa') }}
                                 </x-primary-button>
                             </a>
+                            <a href="{{ route('clientes.index') }}">
+                                <x-primary-button class="ms-3">
+                                    {{ __('Ir a clientes') }}
+                                </x-primary-button>
+                            </a>
                             <a href="{{ route('config') }}">
                                 <x-danger-button class="ms-3">
                                     {{ __('Regresar') }}
