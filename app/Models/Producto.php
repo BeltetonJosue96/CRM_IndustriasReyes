@@ -10,4 +10,9 @@ class Producto extends Model
     use HasFactory;
     protected $table = 'producto';
     protected $primaryKey = 'id_producto';
+
+    public function lineas()
+    {
+        return $this->hasMany(Linea::class, 'id_producto', 'id_producto');
+    }
 }

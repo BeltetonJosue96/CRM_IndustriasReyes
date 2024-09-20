@@ -4,16 +4,36 @@ namespace App\Http\Controllers;
 
 use App\Models\Linea;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
+use Hashids\Hashids;
 
 class LineaController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    protected $hashids;
+    public function __construct()
     {
-        // Obtiene todos los registros de la tabla 'linea'
-        $lineas = Linea::all();
+        $this->hashids = new Hashids(env('APP_KEY'), 10);
+    }
+    public function index(Request $request)
+    {
+        $query = Linea::query();
+        // Si se incluye un término de búsqueda, se filtra por nombre o ID del producto
+        if ($request->has('search')) {
+            $searchTerm = $request->search;
+            $query->where('nombre', 'LIKE', "%{$searchTerm}%")
+                ->orWhere('id_linea', 'LIKE', "%{$searchTerm}%");
+        }
+
+        $lineas = $query->paginate(10);
+
+        $lineas->getCollection()->transform(function ($linea) {
+            $linea->hashed_id = $this->hashids->encode($linea->id_linea);
+            return $linea;
+        });
         return view('linea.index', compact('lineas'));
     }
 
@@ -22,8 +42,10 @@ class LineaController extends Controller
      */
     public function create()
     {
-        // Muestra el formulario para crear una nueva línea
-        return view('linea.create');
+        $Productos = DB::table('producto')->orderBy('id_producto', 'asc')->get();
+
+        // Pasar los datos a la vista
+        return view('linea.create', compact('Productos'));
     }
 
     /**
@@ -36,12 +58,15 @@ class LineaController extends Controller
             'nombre' => 'required|string|max:100|unique:linea',
             'id_producto' => 'required|exists:producto,id_producto',
         ]);
-
-        // Crea una nueva línea con los datos proporcionados
-        Linea::create($request->all());
-
-        // Redirige a la lista de líneas con un mensaje de éxito
-        return redirect()->route('linea.index')->with('success', 'Línea creada con éxito.');
+        $currentDateTime = Carbon::now('America/Guatemala');
+        $linea = new Linea([
+            'nombre' => $request->nombre,
+            'id_producto' =>$request->id_producto,
+            'created_at' => $currentDateTime,
+            'updated_at' => $currentDateTime
+        ]);
+        $linea->save();
+        return redirect()->route('lineas.index')->with('success', 'Linea registrada correctamente');
     }
 
     /**
@@ -56,39 +81,58 @@ class LineaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Linea $linea)
+    public function edit($hashedId)
     {
-        // Muestra el formulario para editar una línea existente
-        return view('linea.edit', compact('linea'));
+        $id_linea = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_linea) {
+            return redirect()->route('lineas.index')->withErrors('Línea no encontrada.');
+        }
+
+        $linea = Linea::findOrFail($id_linea);
+        $linea->hashed_id = $hashedId;
+        $Productos = DB::table('producto')->get();
+        return view('linea.edit', compact('linea', 'Productos'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Linea $linea)
+    public function update(Request $request, $hashedId)
     {
-        // Valida la solicitud
-        $request->validate([
-            'nombre' => 'required|string|max:100|unique:linea,nombre,' . $linea->id_linea . ',id_linea',
-            'id_producto' => 'required|exists:producto,id_producto',
-        ]);
+        // Decodificar el hashed_id
+        $id_linea = $this->hashids->decode($hashedId)[0] ?? null;
 
-        // Actualiza los datos de la línea existente
+        if (!$id_linea) {
+            abort(404);
+        }
+
+        $linea = Linea::findOrFail($id_linea);
+
+        $request->validate([
+            'nombre' => 'required|string|max:145',
+            'id_producto' => 'required|integer|exists:producto,id_producto',
+        ]);
+        $currentDateTime = Carbon::now('America/Guatemala');
+        $linea->updated_at = $currentDateTime;
+
         $linea->update($request->all());
 
-        // Redirige a la lista de líneas con un mensaje de éxito
-        return redirect()->route('linea.index')->with('success', 'Línea actualizada con éxito.');
+        return redirect()->route('lineas.index');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Linea $linea)
+    public function destroy($hashedId)
     {
-        // Elimina la línea especificada
+        $id_linea = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_linea) {
+            abort(404);
+        }
+
+        $linea = Linea::findOrFail($id_linea);
         $linea->delete();
 
-        // Redirige a la lista de líneas con un mensaje de éxito
-        return redirect()->route('linea.index')->with('success', 'Línea eliminada con éxito.');
+        return redirect()->route('lineas.index');
     }
 }

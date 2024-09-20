@@ -9,4 +9,11 @@ class Linea extends Model
 {
     use HasFactory;
     protected $table = 'linea';
+    protected $primaryKey = 'id_linea';
+    protected $fillable = ['nombre', 'id_producto'];
+
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, 'id_producto');
+    }
 }

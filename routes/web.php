@@ -40,8 +40,12 @@ Route::middleware('auth')->group(function () {
     Route::resource('productos', ProductoController::class)->parameters([
         'productos' => 'hashedId'
     ]);
-    Route::resource('lineas', LineaController::class);
-    Route::resource('modelos', ModeloController::class);
+    Route::resource('lineas', LineaController::class)->parameters([
+        'lineas' => 'hashedId'
+    ]);
+    Route::resource('modelos', ModeloController::class)->parameters([
+        'modelos' => 'hashedId'
+    ]);
     Route::resource('departamentos', DepartamentoController::class)->parameters([
         'departamentos' => 'hashedId'
     ]);
