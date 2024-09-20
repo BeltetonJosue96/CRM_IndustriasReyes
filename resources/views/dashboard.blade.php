@@ -40,7 +40,7 @@
                         <div class="w-full flex justify-center">
                             <a href="{{ route('config') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
                                 <img src="https://cdn-icons-png.freepik.com/256/3315/3315581.png" alt="Configuracion" class="w-20 h-20 mr-2">
-                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Configuración</span>
+                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Configuraciones</span>
                             </a>
                         </div>
                     </div>
