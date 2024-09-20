@@ -10,4 +10,8 @@ class Departamento extends Model
     use HasFactory;
     protected $table = 'departamento';
     protected $primaryKey = 'id_departamento';
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'id_empresa');
+    }
 }

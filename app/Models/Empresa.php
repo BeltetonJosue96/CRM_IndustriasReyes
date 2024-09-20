@@ -10,4 +10,8 @@ class Empresa extends Model
     use HasFactory;
     protected $table = 'empresa';
     protected $primaryKey = 'id_empresa';
+    public function clientes()
+    {
+        return $this->hasMany(Cliente::class, 'id_empresa');
+    }
 }
