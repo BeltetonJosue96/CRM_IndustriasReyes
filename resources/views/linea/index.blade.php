@@ -16,14 +16,14 @@
                                 {{ __('Agregar nueva línea') }}
                             </x-primary-button>
                         </a>
-                        <a href="{{ route('productos.index') }}">
-                            <x-primary-button class="ms-3">
-                                {{ __('Ir a Productos') }}
-                            </x-primary-button>
-                        </a>
                         <a href="{{ route('modelos.index') }}">
                             <x-primary-button class="ms-3">
                                 {{ __('Ir a Modelos') }}
+                            </x-primary-button>
+                        </a>
+                        <a href="{{ route('productos.index') }}">
+                            <x-primary-button class="ms-3">
+                                {{ __('Ir a Productos') }}
                             </x-primary-button>
                         </a>
                         <a href="{{ route('config') }}">
@@ -50,7 +50,7 @@
                             <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
                                 <th class="px-4 py-2">Línea</th>
-                                <th class="px-4 py-2">Asociada a</th>
+                                <th class="px-4 py-2">Producto</th>
                                 <th class="px-4 py-2">Acciones</th>
                             </tr>
                             </thead>
