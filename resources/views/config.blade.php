@@ -14,10 +14,26 @@
                     </h1>
                     <div class="grid grid-cols-2 gap-4 mt-6 place-items-center">
                         <div class="w-full flex justify-center">
-                            <a href="{{ route('productos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/2702/2702154.png" alt="Productos" class="w-20 h-20 mb-2">
+                            <a href="{{ route('modelos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/12019/12019654.png" alt="Modelos" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                    Catálogo de Productos
+                                    Catálogo de Modelos
+                                </span>
+                            </a>
+                        </div>
+                        <div class="w-full flex justify-center">
+                            <a href="{{ route('empresas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/6082/6082589.png" alt="Empresas" class="w-20 h-20 mb-2">
+                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                    Empresas
+                                </span>
+                            </a>
+                        </div>
+                        <div class="w-full flex justify-center">
+                            <a href="{{ route('lineas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/12879/12879103.png" alt="Líneas" class="w-20 h-20 mb-2">
+                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                    Catálogo de Líneas
                                 </span>
                             </a>
                         </div>
@@ -30,10 +46,10 @@
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
-                            <a href="{{ route('empresas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/6082/6082589.png" alt="Empresas" class="w-20 h-20 mb-2">
+                            <a href="{{ route('productos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/2702/2702154.png" alt="Productos" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                    Empresas
+                                    Catálogo de Productos
                                 </span>
                             </a>
                         </div>

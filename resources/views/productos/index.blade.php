@@ -15,6 +15,11 @@
                                 {{ __('Agregar nuevo producto') }}
                             </x-primary-button>
                         </a>
+                        <a href="{{ route('lineas.index') }}">
+                            <x-primary-button class="ms-3">
+                                {{ __('Ir a Líneas') }}
+                            </x-primary-button>
+                        </a>
                         <a href="{{ route('config') }}">
                             <x-danger-button class="ms-3">
                                 {{ __('Regresar') }}
@@ -45,7 +50,7 @@
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($productos as $producto)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td class="px-4 py-2">{{ $producto->nombre }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $producto->nombre }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-center items-center space-x-2">
                                             <a href="{{ route('productos.edit', $producto->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
