@@ -16,4 +16,7 @@ class Linea extends Model
     {
         return $this->belongsTo(Producto::class, 'id_producto');
     }
+    public function modelo(){
+        return $this->hasMany(Modelo::class, 'id_linea');
+    }
 }

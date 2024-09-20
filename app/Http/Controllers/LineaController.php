@@ -42,7 +42,7 @@ class LineaController extends Controller
      */
     public function create()
     {
-        $Productos = DB::table('producto')->orderBy('id_producto', 'asc')->get();
+        $Productos = DB::table('producto')->orderBy('id_producto', 'ASC')->get();
 
         // Pasar los datos a la vista
         return view('linea.create', compact('Productos'));
