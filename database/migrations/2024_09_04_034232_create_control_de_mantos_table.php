@@ -13,6 +13,7 @@ return new class extends Migration
     {
         Schema::create('control_de_manto', function (Blueprint $table) {
             $table->id('id_control_manto')->unique();
+            $table->unsignedBigInteger('id_detalle');
             $table->unsignedBigInteger('id_cliente');
             $table->unsignedBigInteger('id_modelo');
             $table->unsignedBigInteger('id_plan_manto');
@@ -22,6 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign key constraints
+            $table->foreign('id_detalle')->references('id_detalle')->on('detalle_venta');
             $table->foreign('id_cliente')->references('id_cliente')->on('cliente');
             $table->foreign('id_modelo')->references('id_modelo')->on('modelo');
             $table->foreign('id_plan_manto')->references('id_plan_manto')->on('plan_manto');

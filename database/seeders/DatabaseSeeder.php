@@ -19,5 +19,9 @@ class DatabaseSeeder extends Seeder
             'name' => 'Josué Beltetón',
             'email' => 'super@industriasreyes.com',
         ]);
+        $this->call(PlanMantoSeeder::class);
+        $this->call(DepartamentoSeeder::class);
+        $this->call(EstadosSeeder::class);
+        $this->call(ProductosSeeder::class);
     }
 }
