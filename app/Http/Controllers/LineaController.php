@@ -55,7 +55,7 @@ class LineaController extends Controller
     {
         // Valida la solicitud
         $request->validate([
-            'nombre' => 'required|string|max:100|unique:linea',
+            'nombre' => 'required|string|max:100',
             'id_producto' => 'required|exists:producto,id_producto',
         ]);
         $currentDateTime = Carbon::now('America/Guatemala');
