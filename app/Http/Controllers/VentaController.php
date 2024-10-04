@@ -54,9 +54,12 @@ class VentaController extends Controller
     }
     public function create()
     {
-        $Clientes = DB::table('cliente')->orderBy('id_cliente', 'ASC')->get();
+        $Clientes = DB::table('cliente')
+            ->leftJoin('empresa', 'cliente.id_empresa', '=', 'empresa.id_empresa')
+            ->select('cliente.*', DB::raw('IFNULL(empresa.nombre, "Sin empresa") as nombre_empresa'))
+            ->orderBy('cliente.id_cliente', 'ASC')
+            ->get();
 
-        // Pasar los datos a la vista
         return view('ventas.create', compact('Clientes'));
     }
     public function store(Request $request)
