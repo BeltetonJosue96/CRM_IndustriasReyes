@@ -31,7 +31,7 @@
                                 {{ __('Regresar') }}
                             </x-danger-button>
                         </a>
-                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Líneas registradas</h2>
+                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Modelos registrados</h2>
                     </div>
                     <!-- Cuadro de búsqueda centrado -->
                     <div class="flex flex-col items-center mt-2">

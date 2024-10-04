@@ -99,7 +99,7 @@ class ClienteController extends Controller
 
         $cliente->save();
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente creado exitosamente.');
+        return redirect()->route('clientes.index');
     }
 
     /**

@@ -3,96 +3,92 @@
 namespace App\Http\Controllers;
 
 use App\Models\DetalleVenta;
+use App\Models\Modelo;
+use Hashids\Hashids;
 use Illuminate\Http\Request;
+use App\Models\PlanManto;
+use App\Models\Venta;
+use Illuminate\Support\Facades\DB;
 
 class DetalleVentaController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    protected $hashids;
+
+    public function __construct()
     {
-        // Obtiene todos los registros de detalle_venta
-        $detalleVentas = DetalleVenta::all();
-        return view('detalle_venta.index', compact('detalleVentas'));
+        $this->hashids = new Hashids(env('APP_KEY'), 10);
+    }
+    public function create($hashedId)
+    {
+        $id_venta = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_venta) {
+            abort(404);
+        }
+
+        $venta = Venta::findOrFail($id_venta);
+        $modelos = DB::table('modelo')
+            ->join('linea', 'modelo.id_linea', '=', 'linea.id_linea')
+            ->join('producto', 'linea.id_producto', '=', 'producto.id_producto')
+            ->select('modelo.id_modelo', 'modelo.codigo as modelo_codigo', 'linea.nombre as linea_nombre', 'producto.nombre as producto_nombre', 'modelo.descripcion')
+            ->orderBy('modelo.id_modelo', 'ASC')
+            ->get();
+
+        $planes = PlanManto::orderBy('id_plan_manto', 'ASC')->get();
+
+        // Obtener los detalles de venta para la venta y generar el `hashed_id`
+        $detalles = DetalleVenta::where('id_venta', $id_venta)->get()->map(function($detalle) {
+            $detalle->hashed_id = $this->hashids->encode($detalle->id_detalle); // Genera el `hashed_id`
+            return $detalle;
+        });
+
+        return view('detalle_venta.create', compact('venta', 'modelos', 'planes', 'detalles', 'hashedId'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        // Muestra el formulario para crear un nuevo detalle_venta
-        return view('detalle_venta.create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
     public function store(Request $request)
     {
-        // Valida la solicitud
+        // Validación de los datos recibidos
         $request->validate([
-            'costo' => 'required|numeric',
-            'id_venta' => 'required|exists:venta,id_venta',
-            'id_plan_manto' => 'required|exists:plan_manto,id_plan_manto',
             'id_modelo' => 'required|exists:modelo,id_modelo',
+            'costo' => 'required|numeric|min:0',
+            'id_plan_manto' => 'required|exists:plan_manto,id_plan_manto',
+            'hashed_id_venta' => 'required',
         ]);
 
-        // Crea un nuevo registro de detalle_venta
-        DetalleVenta::create($request->all());
+        // Decodificar el id de la venta usando Hashids
+        $id_venta = $this->hashids->decode($request->hashed_id_venta)[0] ?? null;
+        if (!$id_venta) {
+            return response()->json(['success' => false, 'message' => 'Venta no encontrada'], 404);
+        }
 
-        // Redirige a la lista de detalles con un mensaje de éxito
-        return redirect()->route('detalle_venta.index')->with('success', 'Detalle de venta creado exitosamente.');
+        // Crear un nuevo detalle de venta
+        $detalle = new DetalleVenta();
+        $detalle->id_venta = $id_venta;
+        $detalle->id_modelo = $request->id_modelo;
+        $detalle->costo = $request->costo;
+        $detalle->id_plan_manto = $request->id_plan_manto;
+
+        // Guardar el detalle
+        if ($detalle->save()) {
+            // Codificar el `id_detalle` con Hashids
+            $hashedIdDetalle = $this->hashids->encode($detalle->id_detalle);
+
+            $detalle->load('modelo', 'planManto');
+
+            return response()->json([
+                'success' => true,
+                'detalle' => [
+                    'id' => $detalle->id_detalle,
+                    'hashed_id' => $hashedIdDetalle, // Enviar el `hashed_id` en la respuesta
+                    'modelo' => [
+                        'descripcion' => $detalle->modelo->codigo
+                    ],
+                    'costo' => $detalle->costo,
+                    'plan_manto' => $detalle->planManto->nombre,
+                ]
+            ]);
+        } else {
+            return response()->json(['success' => false, 'errors' => ['No se pudo agregar el detalle']], 500);
+        }
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(DetalleVenta $detalleVenta)
-    {
-        // Muestra los detalles de un registro específico
-        return view('detalle_venta.show', compact('detalleVenta'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(DetalleVenta $detalleVenta)
-    {
-        // Muestra el formulario para editar un detalle_venta específico
-        return view('detalle_venta.edit', compact('detalleVenta'));
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, DetalleVenta $detalleVenta)
-    {
-        // Valida la solicitud
-        $request->validate([
-            'costo' => 'required|numeric',
-            'id_venta' => 'required|exists:venta,id_venta',
-            'id_plan_manto' => 'required|exists:plan_manto,id_plan_manto',
-            'id_modelo' => 'required|exists:modelo,id_modelo',
-        ]);
-
-        // Actualiza el registro de detalle_venta
-        $detalleVenta->update($request->all());
-
-        // Redirige a la lista de detalles con un mensaje de éxito
-        return redirect()->route('detalle_venta.index')->with('success', 'Detalle de venta actualizado exitosamente.');
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(DetalleVenta $detalleVenta)
-    {
-        // Elimina el registro de detalle_venta
-        $detalleVenta->delete();
-
-        // Redirige a la lista de detalles con un mensaje de éxito
-        return redirect()->route('detalle_venta.index')->with('success', 'Detalle de venta eliminado exitosamente.');
-    }
 }

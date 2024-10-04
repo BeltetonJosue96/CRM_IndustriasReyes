@@ -11,17 +11,17 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <!-- Comienza el contenido -->
                     <div class="text-center">
-                        <a href="{{ route('planes.create') }}">
+                        <!--<a href="{{ route('planes.create') }}">
                             <x-primary-button class="ms-3">
                                 {{ __('Agregar nuevo plan') }}
                             </x-primary-button>
-                        </a>
+                        </a> -->
                         <a href="{{ route('config') }}">
                             <x-danger-button class="ms-3">
                                 {{ __('Regresar') }}
                             </x-danger-button>
                         </a>
-                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Productos registrados</h2>
+                        <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Planes de mantenimiento registrados (solo visualización)</h2>
                     </div>
                     <!-- Cuadro de búsqueda centrado -->
                     <div class="flex flex-col items-center mt-2">
@@ -42,7 +42,7 @@
                                 <th class="px-4 py-2">Plan</th>
                                 <th class="px-4 py-2">Descripción</th>
                                 <th class="px-4 py-2">Frecuencia/mes</th>
-                                <th class="px-4 py-2">Acciones</th>
+                                <!--<th class="px-4 py-2">Acciones</th> -->
                             </tr>
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
@@ -51,7 +51,7 @@
                                     <td class="px-4 py-2 text-center">{{ $plan->nombre }}</td>
                                     <td class="px-4 py-2 text-center">{{ $plan->descripcion }}</td>
                                     <td class="px-4 py-2 text-center">{{ $plan->frecuencia_mes }}</td>
-                                    <td class="px-4 py-2">
+                                    <!-- <td class="px-4 py-2">
                                         <div class="flex justify-center items-center space-x-2">
                                             <a href="{{ route('planes.edit', $plan->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
                                                 ✍️
@@ -64,7 +64,7 @@
                                                 </button>
                                             </form>
                                         </div>
-                                    </td>
+                                    </td> -->
                                 </tr>
                             @endforeach
                             </tbody>

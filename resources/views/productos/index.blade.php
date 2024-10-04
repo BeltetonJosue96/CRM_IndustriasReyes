@@ -38,7 +38,7 @@
                     </div>
 
                     @if($productos->isEmpty())
-                        <p class="text-center text-gray-500 dark:text-gray-400">Sin coincidencias, no hay productos disponibles en este momento.</p>
+                        <p class="text-center text-gray-500 dark:text-gray-400 mt-4">Sin coincidencias, no hay productos disponibles en este momento.</p>
                     @else
                         <table class="mt-6 w-full table-auto items-center">
                             <thead class="bg-gray-50 dark:bg-gray-700">

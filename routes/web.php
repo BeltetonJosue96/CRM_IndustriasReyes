@@ -55,11 +55,17 @@ Route::middleware('auth')->group(function () {
     Route::resource('clientes', ClienteController::class)->parameters([
         'clientes' => 'hashedId'
     ]);
-    Route::resource('ventas', VentaController::class);
+    Route::resource('ventas', VentaController::class)->parameters([
+        'ventas' => 'hashedId'
+    ]);
     Route::resource('planes', PlanMantoController::class)->parameters([
         'planes' => 'hashedId'
     ]);
-    Route::resource('detalle_ventas', DetalleVentaController::class);
+    // Define la ruta 'create' manualmente con el hashedId
+    Route::get('/detalle_ventas/create/{hashedId}', [DetalleVentaController::class, 'create'])->name('detalle_ventas.create');
+    Route::resource('detalle_ventas', DetalleVentaController::class)->except(['create','show']);
+
+
     Route::resource('checklist', ChecklistController::class);
     Route::resource('estados', EstadoController::class)->parameters([
         'estados' => 'hashedId'
