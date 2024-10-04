@@ -90,5 +90,71 @@ class DetalleVentaController extends Controller
             return response()->json(['success' => false, 'errors' => ['No se pudo agregar el detalle']], 500);
         }
     }
+    public function edit($hashedId)
+    {
+        // Decodificar el hashed_id para obtener el id_venta
+        $id_venta = $this->hashids->decode($hashedId)[0] ?? null;
+
+        if (!$id_venta) {
+            abort(404, 'Venta no encontrada');
+        }
+
+        // Obtener la venta asociada
+        $venta = Venta::findOrFail($id_venta);
+
+        // Obtener todos los detalles de la venta
+        $detalles = DetalleVenta::where('id_venta', $id_venta)->get()->map(function ($detalle) {
+            $detalle->hashed_id = $this->hashids->encode($detalle->id_detalle); // Generar hashed_id para cada detalle
+            return $detalle;
+        });
+
+        // Obtener los modelos y planes de mantenimiento para poblar los selects
+        $modelos = DB::table('modelo')
+            ->join('linea', 'modelo.id_linea', '=', 'linea.id_linea')
+            ->join('producto', 'linea.id_producto', '=', 'producto.id_producto')
+            ->select('modelo.id_modelo', 'modelo.codigo as modelo_codigo', 'linea.nombre as linea_nombre', 'producto.nombre as producto_nombre', 'modelo.descripcion')
+            ->orderBy('modelo.id_modelo', 'ASC')
+            ->get();
+
+        $planes = PlanManto::orderBy('id_plan_manto', 'ASC')->get();
+
+        // Retornar la vista con los detalles cargados
+        return view('detalle_venta.edit', compact('venta', 'detalles', 'modelos', 'planes', 'hashedId'))
+            ->with('hashids', $this->hashids);
+    }
+
+    public function update(Request $request, $hashed_id)
+    {
+        // Decodificar el hashed_id para obtener el id_detalle
+        $id_detalleArray = $this->hashids->decode($hashed_id);
+
+        // Verificar si se ha decodificado correctamente
+        if (empty($id_detalleArray)) {
+            return redirect()->route('detalle_ventas.index')->with('error', 'Detalle no encontrado.');
+        }
+
+        $id_detalle = $id_detalleArray[0];
+
+        // Validar los datos del formulario
+        $validatedData = $request->validate([
+            'id_modelo' => 'required|exists:modelo,id_modelo',
+            'costo' => 'required|numeric|min:0',
+            'id_plan_manto' => 'required|exists:plan_manto,id_plan_manto',
+        ]);
+
+        // Buscar el detalle de venta usando el id_detalle
+        $detalle = DetalleVenta::findOrFail($id_detalle);
+
+        // Actualizar los valores
+        $detalle->update([
+            'id_modelo' => $validatedData['id_modelo'],
+            'costo' => $validatedData['costo'],
+            'id_plan_manto' => $validatedData['id_plan_manto'],
+        ]);
+
+        // Redirigir a la vista de edición de la venta asociada
+        return redirect()->route('detalle_ventas.edit', $this->hashids->encode($detalle->id_venta))
+            ->with('success', 'Detalle de venta actualizado correctamente');
+    }
 
 }

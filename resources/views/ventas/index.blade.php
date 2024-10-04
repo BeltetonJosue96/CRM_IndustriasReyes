@@ -57,10 +57,10 @@
                                     <td class="px-4 py-2 text-center">{{ $venta->id_venta }} - {{ \Carbon\Carbon::parse($venta->fecha_venta)->year }}</td>
                                     <td class="px-4 py-2 text-center">{{ \Carbon\Carbon::parse($venta->fecha_venta)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-2 text-center">{{ $venta->descripcion }}</td>
-                                    <td class="px-4 py-2 text-center">{{ $venta->cliente->nombre }} {{ $venta->cliente->apellidos }}</td>
+                                    <td class="px-4 py-2 text-center">ID: {{ $venta->cliente->id_cliente }} - {{ $venta->cliente->nombre }} {{ $venta->cliente->apellidos }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-center items-center space-x-2">
-                                            <a href="{{ route('ventas.show', $venta->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
+                                            <a href="{{ route('detalle_ventas.edit', $venta->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
                                                 🧾
                                             </a>
                                             <a href="{{ route('ventas.edit', $venta->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
