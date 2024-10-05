@@ -38,7 +38,8 @@ class VentaController extends Controller
                 ->orWhereHas('cliente', function ($query) use ($searchTerm) {
                     $query->where('nombre', 'like', "%$searchTerm%")
                         ->orWhere('apellidos', 'like', "%$searchTerm%");
-                });
+                })
+                ->orWhere('id_venta', $searchTerm);
 
             // Si la búsqueda es una fecha válida, se realiza la búsqueda por fecha
             if ($dateSearch) {

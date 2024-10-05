@@ -44,7 +44,7 @@
                         <table class="mt-6 w-full table-auto items-center">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-4 py-2">#</th>
+                                <th class="px-4 py-2">Cod.</th>
                                 <th class="px-4 py-2">Fecha</th>
                                 <th class="px-4 py-2">Descripción</th>
                                 <th class="px-4 py-2">Cliente</th>
