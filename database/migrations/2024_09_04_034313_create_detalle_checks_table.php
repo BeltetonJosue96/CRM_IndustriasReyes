@@ -21,7 +21,7 @@ return new class extends Migration
 
             $table->foreign('id_check')->references('id_check')->on('checklist')->onDelete('cascade');
             $table->foreign('id_control_manto')->references('id_control_manto')->on('control_de_manto')->onDelete('cascade');
-            $table->foreign('id_estado')->references('id_estado')->on('estado')->onDelete('cascade');
+            $table->foreign('id_estado')->references('id_estado')->on('estado');
 
         });
     }

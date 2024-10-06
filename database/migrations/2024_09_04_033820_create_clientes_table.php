@@ -31,8 +31,7 @@ return new class extends Migration
 
             $table->foreign('id_departamento')
                 ->references('id_departamento')
-                ->on('departamento')
-                ->onDelete('cascade');
+                ->on('departamento');
             $table->timestamps();
         });
     }

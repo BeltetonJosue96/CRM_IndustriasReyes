@@ -21,8 +21,8 @@ return new class extends Migration
 
             // Foreign Key Constraints
             $table->foreign('id_venta')->references('id_venta')->on('venta')->onDelete('cascade');
-            $table->foreign('id_plan_manto')->references('id_plan_manto')->on('plan_manto')->onDelete('cascade');
-            $table->foreign('id_modelo')->references('id_modelo')->on('modelo')->onDelete('cascade');
+            $table->foreign('id_plan_manto')->references('id_plan_manto')->on('plan_manto');
+            $table->foreign('id_modelo')->references('id_modelo')->on('modelo');
 
         });
     }

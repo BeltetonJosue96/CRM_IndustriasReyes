@@ -23,7 +23,7 @@ return new class extends Migration
             $table->timestamps();
 
             // Foreign key constraints
-            $table->foreign('id_detalle')->references('id_detalle')->on('detalle_venta');
+            $table->foreign('id_detalle')->references('id_detalle')->on('detalle_venta')->onDelete('cascade');
             $table->foreign('id_cliente')->references('id_cliente')->on('cliente');
             $table->foreign('id_modelo')->references('id_modelo')->on('modelo');
             $table->foreign('id_plan_manto')->references('id_plan_manto')->on('plan_manto');

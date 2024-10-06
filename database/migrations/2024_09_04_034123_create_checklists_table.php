@@ -16,17 +16,10 @@ return new class extends Migration
             $table->date('fecha_creacion');
             $table->unsignedBigInteger('id_plan_manto');
 
-
-
-            // Índices
-            $table->index('id_plan_manto', 'fk_checklist_plan_manto1_idx');
-
             // Relaciones
             $table->foreign('id_plan_manto')
                 ->references('id_plan_manto')
-                ->on('plan_manto')
-                ->onDelete('cascade')
-                ->onUpdate('cascade');
+                ->on('plan_manto');
 
             $table->timestamps();
         });

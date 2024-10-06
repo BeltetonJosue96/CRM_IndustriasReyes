@@ -16,7 +16,7 @@ return new class extends Migration
             $table->date('fecha_venta');
             $table->string('descripcion', 245);
             $table->unsignedBigInteger('id_cliente');
-            $table->foreign('id_cliente')->references('id_cliente')->on('cliente')->onDelete('cascade');
+            $table->foreign('id_cliente')->references('id_cliente')->on('cliente');
             $table->timestamps();
         });
     }
