@@ -60,6 +60,14 @@ class ModeloController extends Controller
             'codigo' => 'required|max:45|unique:modelo',
             'descripcion' => 'required|max:45',
             'id_linea' => 'required|exists:linea,id_linea',
+        ], [
+            'codigo.required' => 'El campo código es obligatorio.',
+            'codigo.max' => 'El código no puede tener más de 45 caracteres.',
+            'codigo.unique' => 'Este código ya está registrado.',
+            'descripcion.required' => 'La descripción es obligatoria.',
+            'descripcion.max' => 'La descripción no puede tener más de 45 caracteres.',
+            'id_linea.required' => 'Debe seleccionar una línea.',
+            'id_linea.exists' => 'La línea seleccionada no es válida.',
         ]);
         $currentDateTime = Carbon::now('America/Guatemala');
         $modelo = new Modelo([

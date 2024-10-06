@@ -20,15 +20,23 @@
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
-                            <a href="{{ route('checklist.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/2666/2666436.png" alt="Checklist" class="w-20 h-20 mr-2">
-                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Checklist Posventa</span>
+                            <a href="{{ route('empresas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/6082/6082589.png" alt="Empresas" class="w-20 h-20 mb-2">
+                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
+                                    Empresas
+                                </span>
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
                             <a href="{{ route('ventas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
                                 <img src="https://cdn-icons-png.freepik.com/256/781/781760.png" alt="Ventas" class="w-20 h-20 mr-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Ventas</span>
+                            </a>
+                        </div>
+                        <div class="w-full flex justify-center">
+                            <a href="{{ route('checklist.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/2666/2666436.png" alt="Checklist" class="w-20 h-20 mr-2">
+                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Checklist Posventa</span>
                             </a>
                         </div>
                         <div class="w-full flex justify-center">

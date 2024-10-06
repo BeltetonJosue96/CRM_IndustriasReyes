@@ -22,10 +22,10 @@
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
-                            <a href="{{ route('empresas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/6082/6082589.png" alt="Empresas" class="w-20 h-20 mb-2">
+                            <a href="{{ route('estados.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/8558/8558628.png" alt="Estados" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                    Empresas
+                                    Estados
                                 </span>
                             </a>
                         </div>
@@ -53,14 +53,7 @@
                                 </span>
                             </a>
                         </div>
-                        <div class="w-full flex justify-center">
-                            <a href="{{ route('estados.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/8558/8558628.png" alt="Estados" class="w-20 h-20 mb-2">
-                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
-                                    Estados
-                                </span>
-                            </a>
-                        </div>
+
                         <div class="w-full flex justify-center">
                             <a href="{{ route('departamentos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
                                 <img src="https://cdn-icons-png.freepik.com/256/2060/2060593.png" alt="Departamentos" class="w-20 h-20 mb-2">

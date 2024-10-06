@@ -41,7 +41,7 @@ class PlanMantoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    /**public function create()
     {
         return view('plan_manto.create');
     }
@@ -49,7 +49,7 @@ class PlanMantoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /**public function store(Request $request)
     {
         $request->validate([
             'nombre' => 'required|string|max:25|unique:plan_manto',
@@ -73,7 +73,7 @@ class PlanMantoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(PlanManto $planManto)
+    /**public function show(PlanManto $planManto)
     {
         return view('plan_manto.show', compact('planManto'));
     }
@@ -81,7 +81,7 @@ class PlanMantoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($hashedId)
+    /**public function edit($hashedId)
     {
         //Se decodifica el ID encriptado
         $id_plan_manto = $this->hashids->decode($hashedId)[0] ?? null;
@@ -97,7 +97,7 @@ class PlanMantoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $hashedId)
+    /**public function update(Request $request, $hashedId)
     {
         $id_plan_manto = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_plan_manto) {
@@ -122,7 +122,7 @@ class PlanMantoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($hashedId)
+    /**public function destroy($hashedId)
     {
         $id = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id) {
@@ -132,5 +132,5 @@ class PlanMantoController extends Controller
         $planManto->delete();
 
         return redirect()->route('planes.index')->with('success', 'Plan de mantenimiento eliminado exitosamente.');
-    }
+    }*/
 }

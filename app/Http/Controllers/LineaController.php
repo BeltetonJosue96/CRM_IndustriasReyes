@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Hashids\Hashids;
+use Illuminate\Database\QueryException;
 
 class LineaController extends Controller
 {
@@ -57,16 +58,35 @@ class LineaController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:100',
             'id_producto' => 'required|exists:producto,id_producto',
+        ], [
+            'nombre.required' => 'El campo nombre es obligatorio.',
+            'nombre.string' => 'El campo nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede tener más de 100 caracteres.',
+            'id_producto.required' => 'Debe seleccionar un producto.',
+            'id_producto.exists' => 'El producto seleccionado no es válido.',
         ]);
+
+        // Verificar si ya existe la línea con el mismo nombre y producto
+        $existingLine = Linea::where('id_producto', $request->id_producto)
+            ->where('nombre', $request->nombre)
+            ->first();
+
+        if ($existingLine) {
+            // Manejo del error si la línea ya existe
+            return redirect()->route('lineas.index')->with('error', '🚫 La línea ya existe para este producto');
+        }
+
+        // Si no existe, se crea la nueva línea
         $currentDateTime = Carbon::now('America/Guatemala');
         $linea = new Linea([
             'nombre' => $request->nombre,
-            'id_producto' =>$request->id_producto,
+            'id_producto' => $request->id_producto,
             'created_at' => $currentDateTime,
             'updated_at' => $currentDateTime
         ]);
         $linea->save();
-        return redirect()->route('lineas.index')->with('success', 'Linea registrada correctamente');
+
+        return redirect()->route('lineas.index')->with('success', '✅ Línea registrada correctamente');
     }
 
     /**
@@ -117,7 +137,7 @@ class LineaController extends Controller
 
         $linea->update($request->all());
 
-        return redirect()->route('lineas.index');
+        return redirect()->route('lineas.index')->with('success', '✅ Línea actualizada correctamente.');
     }
 
     /**
@@ -131,8 +151,16 @@ class LineaController extends Controller
         }
 
         $linea = Linea::findOrFail($id_linea);
-        $linea->delete();
-
-        return redirect()->route('lineas.index');
+        try {
+            $linea->delete();
+            return redirect()->route('lineas.index')->with('success', '✅ ¡Eliminado! La línea se ha borrado correctamente.');
+        } catch (QueryException $e) {
+            // Capturar el error específico de clave foránea
+            if ($e->getCode() == "23000") {
+                return redirect()->route('lineas.index')->with('error', '❌ Operación no permitida. La línea está vinculada a otros datos.');
+            }
+            // Capturar otros tipos de errores
+            return redirect()->route('lineas.index')->with('error', '⚠️ ¡Ups! Algo salió mal. Intenta nuevamente más tarde.');
+        }
     }
 }

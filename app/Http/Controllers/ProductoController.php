@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Hashids\Hashids;
+use Illuminate\Database\QueryException;
 /**
  * Controlador para la gestión de productos.
  * Este controlador maneja la creación, actualización, listado y eliminación de productos.
@@ -78,7 +79,7 @@ class ProductoController extends Controller
             'updated_at' => $currentDateTime,
         ]);
         //Se retorna la vista Index y se cargan todos los productos.
-        return redirect()->route('productos.index')->with('success', 'Producto creado exitosamente.');
+        return redirect()->route('productos.index')->with('success', '✅ Producto registrado exitosamente.');
     }
 
     /**
@@ -123,6 +124,9 @@ class ProductoController extends Controller
         $request->validate([
             'nombre' => 'required|string|max:75|unique:producto,nombre,' . $producto->id_producto . ',id_producto',
         ], [
+            'nombre.required' => 'El campo nombre es obligatorio.',
+            'nombre.string' => 'El campo nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede tener más de 75 caracteres.',
             'nombre.unique' => 'El nombre del producto ya existe. Por favor, elige otro nombre.',
         ]);
         $currentDateTime = Carbon::now('America/Guatemala');
@@ -130,20 +134,35 @@ class ProductoController extends Controller
         $producto->updated_at = $currentDateTime;
         $producto->save();
 
-        return redirect()->route('productos.index')->with('success', 'Producto actualizado correctamente.');
+        return redirect()->route('productos.index')->with('success', '✅ Producto actualizado correctamente.');
     }
     /**
      * Remove the specified resource from storage.
      */
     public function destroy($hashedId)
     {
-        //Se decodifica el ID encriptado
+        // Se decodifica el ID encriptado
         $id = $this->hashids->decode($hashedId)[0] ?? null;
+
         if (!$id) {
             abort(404);
         }
+
         $producto = Producto::findOrFail($id);
-        $producto->delete();
-        return redirect()->route('productos.index')->with('success', 'Producto eliminado exitosamente.');
+
+        try {
+            // Intentar eliminar el producto
+            $producto->delete();
+
+            return redirect()->route('productos.index')->with('success', '✅ ¡Eliminado! El producto se ha borrado correctamente.');
+        } catch (QueryException $e) {
+            // Capturar el error específico de clave foránea
+            if ($e->getCode() == "23000") {
+                return redirect()->route('productos.index')->with('error', '❌ Operación no permitida. El producto está vinculado a otros datos.');
+            }
+
+            // Capturar otros tipos de errores
+            return redirect()->route('productos.index')->with('error', '⚠️ ¡Ups! Algo salió mal. Intenta nuevamente más tarde.');
+        }
     }
 }

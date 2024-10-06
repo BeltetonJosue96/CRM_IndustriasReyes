@@ -42,7 +42,24 @@
                             </x-primary-button>
                         </form>
                     </div>
-
+                    @if(session('success'))
+                        <div id="mensaje" class="alert alert-success">
+                            <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('success') }}</p>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div id="mensaje" class="alert alert-danger">
+                            <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('error') }}</p>
+                        </div>
+                    @endif
+                    <script>
+                        setTimeout(function() {
+                            var errorMessages = document.getElementById('mensaje');
+                            if (errorMessages) {
+                                errorMessages.style.display = 'none';
+                            }
+                        }, 5000);
+                    </script>
                     @if($modelos->isEmpty())
                         <p class="text-center text-gray-500 dark:text-gray-400 mt-4">Sin coincidencias, no hay modelos disponibles en este momento.</p>
                     @else
@@ -69,7 +86,7 @@
                                             <form action="{{ route('modelos.destroy', $modelo->hashed_id ) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('¿Estás seguro de que quieres eliminar este modelo?')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
+                                                <button type="submit" onclick="return confirm('¡Atención! ⚠️ Al eliminar este modelo, TODOS los modelos asociados quedarán automáticamente eliminados. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
                                                     🗑️
                                                 </button>
                                             </form>

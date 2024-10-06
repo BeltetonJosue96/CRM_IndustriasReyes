@@ -39,12 +39,21 @@
                         <div class="grid grid-cols-1 gap-4 mb-6">
                             <div class="flex items-center">
                                 <label for="codigo" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Código</label>
-                                <input type="text" name="codigo" id="codigo" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="codigo" id="codigo" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required oninput="this.value = this.value.toUpperCase()">
                             </div>
                             <div class="flex items-center">
                                 <label for="descripcion" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Descripción</label>
                                 <input type="text" name="descripcion" id="descripcion" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
                             </div>
+                            <script>
+                                document.getElementById('descripcion').addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Formatear la primera letra alfabética como mayúscula
+                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
+                                        return prefix + firstLetter.toUpperCase();
+                                    });
+                                });
+                            </script>
                             <div class="flex items-center">
                                 <label for="id_linea" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Línea asociada</label>
                                 <select name="id_linea" id="id_linea" class="form-control w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>

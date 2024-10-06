@@ -36,7 +36,7 @@ class DepartamentoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    /**public function create()
     {
         return view('departamentos.create');
     }
@@ -44,7 +44,7 @@ class DepartamentoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /**public function store(Request $request)
     {
         $request->validate([
             'nombre' => 'required|string|max:45|unique:departamento,nombre',
@@ -63,7 +63,7 @@ class DepartamentoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show(Departamento $departamento)
+    /**public function show(Departamento $departamento)
     {
         return view('departamentos.show', compact('departamento'));
     }
@@ -71,7 +71,7 @@ class DepartamentoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($hashedId)
+    /**public function edit($hashedId)
     {
         //Se decodifica el ID encriptado
         $id_departamento = $this->hashids->decode($hashedId)[0] ?? null;
@@ -87,7 +87,7 @@ class DepartamentoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $hashedId)
+    /**public function update(Request $request, $hashedId)
     {
         //Se decodifica el ID encriptado
         $id_departamento = $this->hashids->decode($hashedId)[0] ?? null;
@@ -111,7 +111,7 @@ class DepartamentoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($hashedId)
+    /**public function destroy($hashedId)
     {
         //Se decodifica el ID encriptado
         $id = $this->hashids->decode($hashedId)[0] ?? null;
@@ -121,5 +121,5 @@ class DepartamentoController extends Controller
         $departamento = Departamento::findOrFail($id);
         $departamento->delete();
         return redirect()->route('departamentos.index')->with('success', 'Departamento eliminado con éxito.');
-    }
+    }*/
 }

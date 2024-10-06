@@ -42,6 +42,15 @@
                                 <input type="text" name="nombre" id="nombre" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
                             </div>
                         </div>
+                        <script>
+                            document.getElementById('nombre').addEventListener('input', function (e) {
+                                let inputValue = e.target.value;
+                                // Formatear la primera letra alfabética como mayúscula
+                                e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
+                                    return prefix + firstLetter.toUpperCase();
+                                });
+                            });
+                        </script>
 
                         <div class="flex justify-center space-x-4 mt-6">
                             <x-primary-button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">

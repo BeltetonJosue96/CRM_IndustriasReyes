@@ -52,7 +52,7 @@
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach ($empresas as $empresa)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                        <td class="px-4 py-2">{{ $empresa->nombre }}</td>
+                                        <td class="px-4 py-2 text-center">{{ $empresa->nombre }}</td>
                                         <td class="px-4 py-2">
                                             <div class="flex justify-center items-center space-x-2">
                                                 <a href="{{ route('empresas.edit', $empresa->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
@@ -61,7 +61,7 @@
                                                 <form action="{{ route('empresas.destroy', $empresa->hashed_id ) }}" method="POST" class="inline">
                                                     @csrf
                                                     @method('DELETE')
-                                                    <button type="submit" onclick="return confirm('¿Estás seguro de que quieres eliminar esta empresa?')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
+                                                    <button type="submit" onclick="return confirm('¡Atención! ⚠️ Al eliminar esta empresa, TODOS los clientes asociados quedarán automáticamente asignados a Sin Empresa. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
                                                         🗑️
                                                     </button>
                                                 </form>

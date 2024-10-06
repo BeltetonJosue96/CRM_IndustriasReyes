@@ -50,11 +50,27 @@
                                 <label for="fecha_venta" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Fecha de Venta</label>
                                 <input type="date" name="fecha_venta" id="fecha_venta" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
                             </div>
+                            <script>
+                                // Obtener la fecha actual en formato YYYY-MM-DD
+                                const today = new Date().toISOString().split('T')[0];
+
+                                // Asignar la fecha actual como valor predeterminado
+                                document.getElementById('fecha_venta').value = today;
+                            </script>
 
                             <div class="flex items-center">
                                 <label for="descripcion" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Descripción</label>
                                 <textarea name="descripcion" id="descripcion" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" placeholder="Puede ser una oferta u observación del cliente." required></textarea>
                             </div>
+                            <script>
+                                document.getElementById('descripcion').addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Formatear la primera letra alfabética como mayúscula
+                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
+                                        return prefix + firstLetter.toUpperCase();
+                                    });
+                                });
+                            </script>
 
                             <div class="flex items-center">
                                 <label for="id_cliente" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Cliente</label>

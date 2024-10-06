@@ -38,7 +38,7 @@ class EstadoController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    /**public function create()
     {
         return view('estado.create');
     }
@@ -46,7 +46,7 @@ class EstadoController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    /**public function store(Request $request)
     {
         $request->validate([
             'estado' => 'required|string|max:45|unique:estado',
@@ -69,7 +69,7 @@ class EstadoController extends Controller
     /**
      * Display the specified resource.
      */
-    public function show($hashedId)
+    /**public function show($hashedId)
     {
         $id = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id) {
@@ -82,7 +82,7 @@ class EstadoController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit($hashedId)
+    /**public function edit($hashedId)
     {
         $id_estado = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_estado) {
@@ -96,7 +96,7 @@ class EstadoController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, $hashedId)
+    /**public function update(Request $request, $hashedId)
     {
         $id_estado = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_estado) {
@@ -120,7 +120,7 @@ class EstadoController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($hashedId)
+    /**public function destroy($hashedId)
     {
         $id = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id) {
@@ -131,5 +131,5 @@ class EstadoController extends Controller
 
         return redirect()->route('estados.index')
             ->with('success', 'Estado eliminado exitosamente.');
-    }
+    }*/
 }
