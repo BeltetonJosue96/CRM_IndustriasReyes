@@ -42,13 +42,31 @@
                             </x-primary-button>
                         </form>
                     </div>
-
+                    @if(session('success'))
+                        <div id="mensaje" class="alert alert-success">
+                            <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('success') }}</p>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div id="mensaje" class="alert alert-danger">
+                            <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('error') }}</p>
+                        </div>
+                    @endif
+                    <script>
+                        setTimeout(function() {
+                            var errorMessages = document.getElementById('mensaje');
+                            if (errorMessages) {
+                                errorMessages.style.display = 'none';
+                            }
+                        }, 5000);
+                    </script>
                     @if($clientes->isEmpty())
                         <p class="text-center text-gray-500 dark:text-gray-400 mt-4">Sin coincidencias, no hay clientes disponibles en este momento.</p>
                     @else
                         <table class="mt-6 w-full table-auto items-center">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
+                                <th class="px-4 py-2">ID</th>
                                 <th class="px-4 py-2">Nombre</th>
                                 <th class="px-4 py-2">Apellidos</th>
                                 <th class="px-4 py-2">Empresa</th>
@@ -58,6 +76,7 @@
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($clientes as $cliente)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                    <td class="px-4 py-2 text-center">{{ $cliente->id_cliente + 1000}}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }}</td>
                                     <td class="px-4 py-2 text-center">{{ $cliente->nombre }}</td>
                                     <td class="px-4 py-2 text-center">{{ $cliente->apellidos }}</td>
                                     <td class="px-4 py-2 text-center">
@@ -74,7 +93,7 @@
                                             <form action="{{ route('clientes.destroy', $cliente->hashed_id ) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('¿Estás seguro de que quieres eliminar este cliente?')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
+                                                <button type="submit" onclick="return confirm('¡Atención! ⚠️ Al eliminar este cliente, TODAS las dependencias quedarán automáticamente eliminadas. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
                                                     🗑️
                                                 </button>
                                             </form>

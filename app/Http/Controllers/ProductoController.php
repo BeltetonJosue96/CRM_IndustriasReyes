@@ -83,19 +83,6 @@ class ProductoController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show($hashedId)
-    {
-        $id = $this->hashids->decode($hashedId)[0] ?? null;
-        if (!$id) {
-            abort(404);
-        }
-        $producto = Producto::findOrFail($id);
-        return view('productos.show', compact('producto'));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit($hashedId)

@@ -77,7 +77,11 @@
                                 <select name="id_cliente" id="id_cliente" class="form-control w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
                                     <option value="" disabled selected>Seleccione el Cliente</option>
                                     @foreach($Clientes as $cliente)
-                                        <option value="{{ $cliente->id_cliente }}">ID: {{ $cliente->id_cliente }} - {{ $cliente->nombre }} {{ $cliente->apellidos }} - {{ $cliente->nombre_empresa }}</option>
+                                        <option value="{{ $cliente->id_cliente}}">
+                                            ID: {{ $cliente->id_cliente + 1000 }}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }} -
+                                            {{ $cliente->nombre }} {{ $cliente->apellidos }} -
+                                            {{ $cliente->nombre_empresa }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>

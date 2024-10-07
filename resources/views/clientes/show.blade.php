@@ -11,6 +11,7 @@
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Detalles del Cliente</h2>
                     <div class="mt-4">
+                        <p><strong>ID de Cliente: </strong>{{ $cliente->id_cliente + 1000}}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }}</p>
                         <p><strong>Nombre: </strong>{{ $cliente->nombre }}</p>
                         <p><strong>Apellidos: </strong>{{ $cliente->apellidos }}</p>
                         <p><strong>Identificación: </strong>{{ $cliente->identificacion }}</p>

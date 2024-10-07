@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empresa;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +26,20 @@ class EmpresaController extends Controller
         // Si se incluye un término de búsqueda, se filtra por nombre o ID del producto
         if ($request->has('search')) {
             $searchTerm = $request->search;
-            $query->where('nombre', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('id_empresa', 'LIKE', "%{$searchTerm}%");
+
+            // Verificamos si el término de búsqueda tiene el formato "ID-año" (Ej. 5001-2024)
+            if (preg_match('/^(\d+)-(\d{4})$/', $searchTerm, $matches)) {
+                $hiddenId = (int)$matches[1] - 5000;  // Restamos 5000 para obtener el id_empresa original
+                $year = $matches[2];
+
+                // Buscamos por id_empresa y el año de creación
+                $query->where('id_empresa', $hiddenId)
+                    ->whereYear('created_at', $year);
+            } else {
+                // Búsqueda por nombre o id_empresa sin el formato modificado
+                $query->where('nombre', 'LIKE', "%{$searchTerm}%")
+                    ->orWhere('id_empresa', 'LIKE', "%{$searchTerm}%");
+            }
         }
         // Se obtienen los productos paginados (10 por página)
         $empresas = $query->paginate(10);
@@ -68,7 +81,7 @@ class EmpresaController extends Controller
             'updated_at' => $currentDateTime,
         ]);
         //Se retorna la vista Index y se cargan todos los podructos.
-        return redirect()->route('empresas.index')->with('success', 'Empresa creada exitosamente.');
+        return redirect()->route('empresas.index')->with('success', '✅ Empresa registrada exitosamente.');
     }
 
     /**
@@ -116,7 +129,7 @@ class EmpresaController extends Controller
         $empresa->updated_at = $currentDateTime;
         $empresa->save();
 
-        return redirect()->route('empresas.index')->with('success', 'Empresa actualizada correctamente.');
+        return redirect()->route('empresas.index')->with('success', '✅ Empresa actualizada correctamente.');
     }
 
     /**
@@ -130,7 +143,18 @@ class EmpresaController extends Controller
             abort(404);
         }
         $empresa = Empresa::findOrFail($id);
-        $empresa->delete();
-        return redirect()->route('empresas.index')->with('success', 'Empresa eliminada exitosamente.');
+        try {
+            $empresa->delete();
+            return redirect()->route('empresas.index')->with('success', '✅ Empresa eliminada exitosamente.');
+        } catch (QueryException $e) {
+            // Capturar el error específico de clave foránea
+            if ($e->getCode() == "23000") {
+                return redirect()->route('empresas.index')->with('error', '❌ Operación no permitida. La empresa está vinculada a otros datos.');
+            }
+
+            // Capturar otros tipos de errores
+            return redirect()->route('empresas.index')->with('error', '⚠️ ¡Ups! Algo salió mal. Intenta nuevamente más tarde.');
+        }
+
     }
 }

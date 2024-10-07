@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Modelo;
 use App\Models\Linea;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,8 +26,15 @@ class ModeloController extends Controller
 
         if ($request->has('search')) {
             $searchTerm = $request->search;
+
             $query->where('codigo', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('id_modelo', 'LIKE', "%{$searchTerm}%");
+                ->orWhere('descripcion', 'LIKE', "%{$searchTerm}%")
+                ->orWhereHas('linea', function($query) use ($searchTerm) {
+                    $query->where('nombre', 'LIKE', "%{$searchTerm}%")
+                        ->orWhereHas('producto', function($query) use ($searchTerm) {
+                            $query->where('nombre', 'LIKE', "%{$searchTerm}%");
+                        });
+                });
         }
 
         $modelos = $query->paginate(10);
@@ -78,15 +86,7 @@ class ModeloController extends Controller
             'updated_at' => $currentDateTime
         ]);
         $modelo->save();
-        return redirect()->route('modelos.index');
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Modelo $modelo)
-    {
-        return view('modelos.show', compact('modelo'));
+        return redirect()->route('modelos.index')->with('success', '✅ El modelo fue registrado exitosamente.');
     }
 
     /**
@@ -132,7 +132,7 @@ class ModeloController extends Controller
 
         $modelo->update($request->all());
 
-        return redirect()->route('modelos.index');
+        return redirect()->route('modelos.index')->with('success', '✅ El modelo fue actualizado exitosamente.');
     }
 
     /**
@@ -146,6 +146,17 @@ class ModeloController extends Controller
         }
 
         $modelo = Modelo::findOrFail($modelo);
-        $modelo->delete();
-        return redirect()->route('modelos.index')->with('success', 'Modelo eliminado correctamente.');    }
+        try {
+            $modelo->delete();
+            return redirect()->route('modelos.index')->with('success', '✅ ¡Eliminado! El modelo se ha borrado correctamente.');
+        } catch (QueryException $e) {
+            // Capturar el error específico de clave foránea
+            if ($e->getCode() == "23000") {
+                return redirect()->route('modelos.index')->with('error', '❌ Operación no permitida. El modelo está vinculado a otros datos.');
+            }
+
+            // Capturar otros tipos de errores
+            return redirect()->route('modelos.index')->with('error', '⚠️ ¡Ups! Algo salió mal. Intenta nuevamente más tarde.');
+        }
+    }
 }

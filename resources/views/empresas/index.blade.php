@@ -14,7 +14,7 @@
                         <div class="text-center">
                             <a href="{{ route('empresas.create') }}">
                                 <x-primary-button class="ms-3">
-                                    {{ __('Agregar nueva empresa') }}
+                                    🔴 {{ __('Agregar nueva empresa') }}
                                 </x-primary-button>
                             </a>
                             <a href="{{ route('clientes.index') }}">
@@ -22,7 +22,7 @@
                                     {{ __('Ir a clientes') }}
                                 </x-primary-button>
                             </a>
-                            <a href="{{ route('config') }}">
+                            <a href="{{ route('dashboard') }}">
                                 <x-danger-button class="ms-3">
                                     {{ __('Regresar') }}
                                 </x-danger-button>
@@ -38,6 +38,24 @@
                                 </x-primary-button>
                             </form>
                         </div>
+                        @if(session('success'))
+                            <div id="mensaje" class="alert alert-success">
+                                <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('success') }}</p>
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div id="mensaje" class="alert alert-danger">
+                                <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('error') }}</p>
+                            </div>
+                        @endif
+                        <script>
+                            setTimeout(function() {
+                                var errorMessages = document.getElementById('mensaje');
+                                if (errorMessages) {
+                                    errorMessages.style.display = 'none';
+                                }
+                            }, 5000);
+                        </script>
 
                         @if($empresas->isEmpty())
                             <p class="text-center text-gray-500 dark:text-gray-400 mt-4">Sin coincidencias, no hay empresas disponibles en este momento.</p>
@@ -45,6 +63,7 @@
                             <table class="mt-6 w-full table-auto items-center">
                                 <thead class="bg-gray-50 dark:bg-gray-700">
                                 <tr>
+                                    <th class="px-4 py-2">ID</th>
                                     <th class="px-4 py-2">Empresa</th>
                                     <th class="px-4 py-2">Acciones</th>
                                 </tr>
@@ -52,6 +71,7 @@
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach ($empresas as $empresa)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <td class="px-4 py-2 text-center">{{ $empresa->id_empresa + 5000}}-{{ \Carbon\Carbon::parse($empresa->created_at)->year }}</td>
                                         <td class="px-4 py-2 text-center">{{ $empresa->nombre }}</td>
                                         <td class="px-4 py-2">
                                             <div class="flex justify-center items-center space-x-2">

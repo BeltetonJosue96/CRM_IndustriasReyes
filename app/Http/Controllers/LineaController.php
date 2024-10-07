@@ -90,15 +90,6 @@ class LineaController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Linea $linea)
-    {
-        // Muestra los detalles de una línea específica
-        return view('linea.show', compact('linea'));
-    }
-
-    /**
      * Show the form for editing the specified resource.
      */
     public function edit($hashedId)

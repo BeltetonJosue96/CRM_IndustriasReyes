@@ -39,7 +39,7 @@
                             <div class="grid grid-cols-1 gap-4 mb-6">
                                 <div class="flex items-center">
                                     <label for="nombre" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Nombre del producto</label>
-                                    <input type="text" name="nombre" id="nombre" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                    <input type="text" name="nombre" id="nombre" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="Nombre del Producto">
                                 </div>
                             </div>
                             <script>

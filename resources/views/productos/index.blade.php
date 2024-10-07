@@ -12,7 +12,7 @@
                     <div class="text-center">
                         <a href="{{ route('productos.create') }}">
                             <x-primary-button class="ms-3">
-                                {{ __('Agregar nuevo producto') }}
+                                🔴 {{ __('Agregar nuevo producto') }}
                             </x-primary-button>
                         </a>
                         <a href="{{ route('lineas.index') }}">

@@ -41,13 +41,21 @@
                                    class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                         </div>
                         <script>
-                            document.getElementById('nombre').addEventListener('input', function (e) {
-                                let inputValue = e.target.value;
-                                // Formatear la primera letra alfabética como mayúscula
-                                e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
-                                    return prefix + firstLetter.toUpperCase();
+                            function formatInputToUpperCase(element) {
+                                element.addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Solo permitir letras (mayúsculas y minúsculas), tildes y espacios
+                                    let formattedValue = inputValue.replace(/[^a-zA-ZÀ-ÿ\s.]/g, '');
+
+                                    // Convertir la primera letra de cada palabra a mayúscula sin afectar acentos y ñ
+                                    formattedValue = formattedValue.replace(/(?:^|\s)([a-záéíóúñ])/g, function (match, char) {
+                                        return match.replace(char, char.toUpperCase());
+                                    });
+
+                                    e.target.value = formattedValue;
                                 });
-                            });
+                            }
+                            formatInputToUpperCase(document.getElementById('nombre'));
                         </script>
                         <div class="flex justify-center">
                             <x-primary-button>

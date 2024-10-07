@@ -13,7 +13,7 @@
                     <div class="text-center">
                         <a href="{{ route('lineas.create') }}">
                             <x-primary-button class="ms-3">
-                                {{ __('Agregar nueva línea') }}
+                                🔴 {{ __('Agregar nueva línea') }}
                             </x-primary-button>
                         </a>
                         <a href="{{ route('modelos.index') }}">

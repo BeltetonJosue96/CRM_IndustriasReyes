@@ -32,44 +32,71 @@
                             {{ session('success') }}
                         </div>
                     @endif
-
                     <form action="{{ route('clientes.store') }}" method="POST">
                         @csrf
-
                         <div class="grid grid-cols-1 gap-4 mb-6">
                             <div class="flex items-center">
                                 <label for="nombre" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Nombre</label>
-                                <input type="text" name="nombre" id="nombre" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="nombre" id="nombre" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="Nombre Completo del Cliente">
                             </div>
 
                             <div class="flex items-center">
                                 <label for="apellidos" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Apellidos</label>
-                                <input type="text" name="apellidos" id="apellidos" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="apellidos" id="apellidos" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="Apellidos del Cliente">
                             </div>
 
                             <div class="flex items-center">
                                 <label for="identificacion" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Identificación</label>
-                                <input type="text" name="identificacion" id="identificacion" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="identificacion" id="identificacion" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="NIT o DPI" oninput="formatIdentification(this)">
                             </div>
+                            <script>
+                                function formatIdentification(input) {
+                                    // Convertir a mayúsculas
+                                    input.value = input.value.toUpperCase();
+
+                                    // Eliminar todo lo que no sea letras mayúsculas (A-Z) o números (0-9)
+                                    input.value = input.value.replace(/[^A-Z0-9]/g, '');
+                                }
+                            </script>
 
                             <div class="flex items-center">
                                 <label for="telefono" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Teléfono</label>
-                                <input type="number" name="telefono" id="telefono" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="telefono" id="telefono" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="8 dígitos" maxlength="8" oninput="validatePhone(this)">
                             </div>
+
+                            <script>
+                                function validatePhone(input) {
+                                    // Eliminar cualquier carácter que no sea un número
+                                    input.value = input.value.replace(/[^0-9]/g, '');
+                                    // Limitar la longitud a 8 caracteres
+                                    if (input.value.length > 8) {
+                                        input.value = input.value.slice(0, 8);
+                                    }
+                                }
+                            </script>
 
                             <div class="flex items-center">
                                 <label for="direccion" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Dirección</label>
-                                <input type="text" name="direccion" id="direccion" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="direccion" id="direccion" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="Dirección sin Municipio y Departamento">
                             </div>
 
                             <div class="flex items-center">
                                 <label for="referencia" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Referencia</label>
-                                <input type="text" name="referencia" id="referencia" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="referencia" id="referencia" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="A un costado de... Cerca de... A la par de...">
                             </div>
+                            <script>
+                                document.getElementById('referencia').addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Formatear la primera letra alfabética como mayúscula
+                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
+                                        return prefix + firstLetter.toUpperCase();
+                                    });
+                                });
+                            </script>
 
                             <div class="flex items-center">
                                 <label for="municipio" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Municipio</label>
-                                <input type="text" name="municipio" id="municipio" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
+                                <input type="text" name="municipio" id="municipio" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required placeholder="Ingrese el Municipio">
                             </div>
 
                             <div class="flex items-center">
@@ -88,17 +115,38 @@
                                     <option value="" disabled selected>Seleccione la Empresa</option>
                                     <option value="">Sin empresa</option>
                                     @foreach($Empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->nombre }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">ID: {{ $empresa->id_empresa + 5000}}-{{ \Carbon\Carbon::parse($empresa->created_at)->year }} - {{ $empresa->nombre }}</option>
                                     @endforeach
                                 </select>
                             </div>
 
                             <div class="flex items-center">
                                 <label for="cargo" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Cargo (Opcional)</label>
-                                <input type="text" name="cargo" id="cargo" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white">
+                                <input type="text" name="cargo" id="cargo" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" placeholder="Gerente, Jefe, Ejecutivo, Técnico...">
                             </div>
 
                         </div>
+                        <script>
+                            function formatInputToUpperCase(element) {
+                                element.addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Solo permitir letras (mayúsculas y minúsculas), tildes y espacios
+                                    let formattedValue = inputValue.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+
+                                    // Convertir la primera letra de cada palabra a mayúscula sin afectar acentos y ñ
+                                    formattedValue = formattedValue.replace(/(?:^|\s)([a-záéíóúñ])/g, function (match, char) {
+                                        return match.replace(char, char.toUpperCase());
+                                    });
+
+                                    e.target.value = formattedValue;
+                                });
+                            }
+                            // Aplicar la función de formato a los campos de nombre y apellidos
+                            formatInputToUpperCase(document.getElementById('nombre'));
+                            formatInputToUpperCase(document.getElementById('apellidos'));
+                            formatInputToUpperCase(document.getElementById('municipio'));
+                            formatInputToUpperCase(document.getElementById('cargo'));
+                        </script>
 
                         <div class="flex justify-center space-x-4 mt-6">
                             <x-primary-button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">

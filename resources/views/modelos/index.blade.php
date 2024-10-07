@@ -13,7 +13,7 @@
                     <div class="text-center">
                         <a href="{{ route('modelos.create') }}">
                             <x-primary-button class="ms-3">
-                                {{ __('Agregar nuevo modelo') }}
+                                🔴 {{ __('Agregar nuevo modelo') }}
                             </x-primary-button>
                         </a>
                         <a href="{{ route('lineas.index') }}">
@@ -69,6 +69,7 @@
                                 <th class="px-4 py-2">Código</th>
                                 <th class="px-4 py-2">Descripción</th>
                                 <th class="px-4 py-2">Línea</th>
+                                <th class="px-4 py-2">Producto</th>
                                 <th class="px-4 py-2">Acciones</th>
                             </tr>
                             </thead>
@@ -78,6 +79,7 @@
                                     <td class="px-4 py-2 text-center">{{ $modelo->codigo }}</td>
                                     <td class="px-4 py-2">{{ $modelo->descripcion }}</td>
                                     <td class="px-4 py-2 text-center">{{ $modelo->linea->nombre }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $modelo->linea->producto->nombre }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-center items-center space-x-2">
                                             <a href="{{ route('modelos.edit', $modelo->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">

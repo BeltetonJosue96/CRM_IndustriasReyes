@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Cliente;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
@@ -25,20 +26,29 @@ class ClienteController extends Controller
         if ($request->has('search')) {
             $searchTerm = $request->search;
 
-            $query->where(function ($query) use ($searchTerm) {
-                $query->where('nombre', 'LIKE', "%{$searchTerm}%")
-                    ->orWhere('apellidos', 'LIKE', "%{$searchTerm}%");
+            // Si el término de búsqueda tiene el formato ID-año, tratamos de separar ambas partes
+            if (preg_match('/^(\d+)-(\d{4})$/', $searchTerm, $matches)) {
+                $hiddenId = (int)$matches[1] - 1000;  // Restamos 1000 para obtener el id_cliente original
+                $year = $matches[2];
 
-                // Si el término de búsqueda es "Sin empresa", buscamos clientes con id_empresa = null
-                if (strtolower($searchTerm) === 'sin empresa') {
-                    $query->orWhereNull('id_empresa');
-                } else {
-                    // Si el término de búsqueda no es "Sin empresa", buscamos también en la tabla empresa
-                    $query->orWhereHas('empresa', function ($query) use ($searchTerm) {
-                        $query->where('nombre', 'LIKE', "%{$searchTerm}%");
-                    });
-                }
-            });
+                // Buscamos por id_cliente y el año de creación
+                $query->where('id_cliente', $hiddenId)
+                    ->whereYear('created_at', $year);
+            } else {
+                // Búsqueda por nombre, apellidos o empresa
+                $query->where(function ($query) use ($searchTerm) {
+                    $query->where('nombre', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere('apellidos', 'LIKE', "%{$searchTerm}%");
+
+                    if (strtolower($searchTerm) === 'sin empresa') {
+                        $query->orWhereNull('id_empresa');
+                    } else {
+                        $query->orWhereHas('empresa', function ($query) use ($searchTerm) {
+                            $query->where('nombre', 'LIKE', "%{$searchTerm}%");
+                        });
+                    }
+                });
+            }
         }
 
         $clientes = $query->paginate(10);
@@ -73,13 +83,52 @@ class ClienteController extends Controller
             'nombre' => 'required|string|max:145',
             'apellidos' => 'required|string|max:145',
             'identificacion' => 'required|string|max:25|unique:cliente',
-            'telefono' => 'required|string|max:45',
+            'telefono' => 'required|string|max:8',
             'id_empresa' => 'nullable|integer|exists:empresa,id_empresa',
             'cargo' => 'nullable|string|max:45',
             'direccion' => 'required|string|max:245',
             'referencia' => 'required|string|max:245',
             'municipio' => 'required|string|max:45',
             'id_departamento' => 'required|integer|exists:departamento,id_departamento',
+        ], [
+            'nombre.required' => 'El campo nombre es obligatorio.',
+            'nombre.string' => 'El campo nombre debe ser una cadena de texto.',
+            'nombre.max' => 'El nombre no puede tener más de 145 caracteres.',
+
+            'apellidos.required' => 'El campo apellidos es obligatorio.',
+            'apellidos.string' => 'El campo apellidos debe ser una cadena de texto.',
+            'apellidos.max' => 'Los apellidos no pueden tener más de 145 caracteres.',
+
+            'identificacion.required' => 'El campo identificación es obligatorio.',
+            'identificacion.string' => 'El campo identificación debe ser una cadena de texto.',
+            'identificacion.max' => 'La identificación no puede tener más de 25 caracteres.',
+            'identificacion.unique' => 'La identificación ingresada ya existe. Por favor, ingrese una diferente.',
+
+            'telefono.required' => 'El campo teléfono es obligatorio.',
+            'telefono.string' => 'El campo teléfono debe ser una cadena de texto.',
+            'telefono.max' => 'El teléfono no puede tener más de 8 digitos.',
+
+            'id_empresa.integer' => 'El campo empresa debe ser un número entero.',
+            'id_empresa.exists' => 'La empresa seleccionada no es válida.',
+
+            'cargo.string' => 'El campo cargo debe ser una cadena de texto.',
+            'cargo.max' => 'El cargo no puede tener más de 45 caracteres.',
+
+            'direccion.required' => 'El campo dirección es obligatorio.',
+            'direccion.string' => 'El campo dirección debe ser una cadena de texto.',
+            'direccion.max' => 'La dirección no puede tener más de 245 caracteres.',
+
+            'referencia.required' => 'El campo referencia es obligatorio.',
+            'referencia.string' => 'El campo referencia debe ser una cadena de texto.',
+            'referencia.max' => 'La referencia no puede tener más de 245 caracteres.',
+
+            'municipio.required' => 'El campo municipio es obligatorio.',
+            'municipio.string' => 'El campo municipio debe ser una cadena de texto.',
+            'municipio.max' => 'El municipio no puede tener más de 45 caracteres.',
+
+            'id_departamento.required' => 'El campo departamento es obligatorio.',
+            'id_departamento.integer' => 'El campo departamento debe ser un número entero.',
+            'id_departamento.exists' => 'El departamento seleccionado no es válido.',
         ]);
         $currentDateTime = Carbon::now('America/Guatemala');
         $cliente = new Cliente([
@@ -99,7 +148,7 @@ class ClienteController extends Controller
 
         $cliente->save();
 
-        return redirect()->route('clientes.index');
+        return redirect()->route('clientes.index')->with('success', '✅ Cliente registrado exitosamente.');
     }
 
     /**
@@ -168,7 +217,7 @@ class ClienteController extends Controller
 
         $cliente->update($request->all());
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente actualizado exitosamente.');
+        return redirect()->route('clientes.index')->with('success', '✅ Cliente actualizado exitosamente.');
     }
 
     /**
@@ -183,8 +232,19 @@ class ClienteController extends Controller
         }
 
         $cliente = Cliente::findOrFail($id_cliente);
-        $cliente->delete();
+        try {
+            $cliente->delete();
 
-        return redirect()->route('clientes.index')->with('success', 'Cliente eliminado exitosamente.');
+            return redirect()->route('clientes.index')->with('success', '✅ ¡Eliminado! El cliente se ha borrado correctamente.');
+        } catch (QueryException $e) {
+            // Capturar el error específico de clave foránea
+            if ($e->getCode() == "23000") {
+                return redirect()->route('clientes.index')->with('error', '❌ Operación no permitida. El cliente está vinculado a otros datos.');
+            }
+
+            // Capturar otros tipos de errores
+            return redirect()->route('clientes.index')->with('error', '⚠️ ¡Ups! Algo salió mal. Intenta nuevamente más tarde.');
+        }
+
     }
 }
