@@ -13,7 +13,7 @@
                     <div class="text-center">
                         <a href="{{ route('clientes.create') }}">
                             <x-primary-button class="ms-3">
-                                {{ __('Agregar nuevo cliente') }}
+                                🔴 {{ __('Agregar nuevo cliente') }}
                             </x-primary-button>
                         </a>
                         <a href="{{ route('empresas.index') }}">

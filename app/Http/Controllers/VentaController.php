@@ -115,7 +115,11 @@ class VentaController extends Controller
         // Buscar la venta por su ID
         $venta = Venta::findOrFail($id_venta);
         $venta->hashed_id = $hashedId;
-        $clientes = DB::table('cliente')->get();
+        $clientes = DB::table('cliente')
+            ->leftJoin('empresa', 'cliente.id_empresa', '=', 'empresa.id_empresa')
+            ->select('cliente.*', DB::raw('IFNULL(empresa.nombre, "Sin empresa") as nombre_empresa'))
+            ->orderBy('cliente.id_cliente', 'ASC')
+            ->get();
 
         // Retornar la vista de edición con los datos de la venta
         return view('ventas.edit', compact('venta', 'clientes'));
@@ -149,7 +153,7 @@ class VentaController extends Controller
         $venta->save();
 
         // Redirigir al listado de ventas con un mensaje de éxito
-        return redirect()->route('ventas.index')->with('success', 'Venta actualizada correctamente');
+        return redirect()->route('ventas.index')->with('success', '✅ Venta actualizada correctamente');
     }
 
 }

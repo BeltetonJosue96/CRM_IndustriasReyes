@@ -13,7 +13,7 @@
                     <div class="text-center">
                         <a href="{{ route('ventas.create') }}">
                             <x-primary-button class="ms-3">
-                                {{ __('Agregar nueva venta') }}
+                                🔴 {{ __('Agregar nueva venta') }}
                             </x-primary-button>
                         </a>
                         <a href="{{ route('clientes.index') }}">
@@ -37,6 +37,24 @@
                             </x-primary-button>
                         </form>
                     </div>
+                    @if(session('success'))
+                        <div id="mensaje" class="alert alert-success">
+                            <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('success') }}</p>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div id="mensaje" class="alert alert-danger">
+                            <p class="text-center text-gray-500 dark:text-gray-400 mt-4">{{ session('error') }}</p>
+                        </div>
+                    @endif
+                    <script>
+                        setTimeout(function() {
+                            var errorMessages = document.getElementById('mensaje');
+                            if (errorMessages) {
+                                errorMessages.style.display = 'none';
+                            }
+                        }, 5000);
+                    </script>
 
                     @if($ventas->isEmpty())
                         <p class="text-center text-gray-500 dark:text-gray-400 mt-4">Sin coincidencias, no hay ventas disponibles en este momento.</p>
@@ -44,7 +62,7 @@
                         <table class="mt-6 w-full table-auto items-center">
                             <thead class="bg-gray-50 dark:bg-gray-700">
                             <tr>
-                                <th class="px-4 py-2">Cod.</th>
+                                <th class="px-4 py-2">No.</th>
                                 <th class="px-4 py-2">Fecha</th>
                                 <th class="px-4 py-2">Descripción</th>
                                 <th class="px-4 py-2">Cliente</th>
@@ -57,7 +75,7 @@
                                     <td class="px-4 py-2 text-center">{{ $venta->id_venta }} - {{ \Carbon\Carbon::parse($venta->fecha_venta)->year }}</td>
                                     <td class="px-4 py-2 text-center">{{ \Carbon\Carbon::parse($venta->fecha_venta)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-2 text-center">{{ $venta->descripcion }}</td>
-                                    <td class="px-4 py-2 text-center">ID: {{ $venta->cliente->id_cliente }} - {{ $venta->cliente->nombre }} {{ $venta->cliente->apellidos }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $venta->id_cliente + 1000}}-{{ \Carbon\Carbon::parse($venta->created_at)->year }} - {{ $venta->cliente->nombre }} {{ $venta->cliente->apellidos }}</td>
                                     <td class="px-4 py-2">
                                         <div class="flex justify-center items-center space-x-2">
                                             <a href="{{ route('detalle_ventas.edit', $venta->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
@@ -69,7 +87,7 @@
                                             <form action="{{ route('ventas.destroy', $venta->hashed_id ) }}" method="POST" class="inline">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" onclick="return confirm('¿Estás seguro de que quieres eliminar esta venta?')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
+                                                <button type="submit" onclick="return confirm('¡Atención! ⚠️ Al eliminar esta venta, TODOS los registros de detalles y mantenimientos asociados quedarán automáticamente eliminados. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
                                                     🗑️
                                                 </button>
                                             </form>

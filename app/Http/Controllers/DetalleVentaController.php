@@ -77,7 +77,7 @@ class DetalleVentaController extends Controller
             return response()->json([
                 'success' => true,
                 'detalle' => [
-                    'id' => $detalle->id_detalle,
+                    'id_detalle' => $detalle->id_detalle,
                     'hashed_id' => $hashedIdDetalle, // Enviar el `hashed_id` en la respuesta
                     'modelo' => [
                         'descripcion' => $detalle->modelo->codigo
@@ -155,6 +155,39 @@ class DetalleVentaController extends Controller
         // Redirigir a la vista de edición de la venta asociada
         return redirect()->route('detalle_ventas.edit', $this->hashids->encode($detalle->id_venta))
             ->with('success', 'Detalle de venta actualizado correctamente');
+    }
+    public function destroy($hashed_id)
+    {
+        // Decodificar el hashed_id para obtener el id_detalle
+        $id_detalleArray = $this->hashids->decode($hashed_id);
+
+        // Verificar si se ha decodificado correctamente
+        if (empty($id_detalleArray)) {
+            return response()->json(['success' => false, 'message' => 'Detalle no encontrado.'], 404);
+        }
+
+        $id_detalle = $id_detalleArray[0];
+
+        // Buscar el detalle de venta
+        $detalle = DetalleVenta::find($id_detalle);
+
+        if (!$detalle) {
+            return response()->json(['success' => false, 'message' => 'Detalle no encontrado.'], 404);
+        }
+
+        // Guardar el costo antes de eliminar para actualizar el total
+        $costo = $detalle->costo;
+
+        // Eliminar el detalle
+        if ($detalle->delete()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Detalle eliminado correctamente.',
+                'costo_eliminado' => $costo,
+            ]);
+        } else {
+            return response()->json(['success' => false, 'message' => 'No se pudo eliminar el detalle.'], 500);
+        }
     }
 
 }

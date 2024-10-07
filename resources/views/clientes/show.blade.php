@@ -9,19 +9,54 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <h2 class="text-2xl font-semibold text-gray-800 dark:text-gray-100">Detalles del Cliente</h2>
-                    <div class="mt-4">
-                        <p><strong>ID de Cliente: </strong>{{ $cliente->id_cliente + 1000}}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }}</p>
-                        <p><strong>Nombre: </strong>{{ $cliente->nombre }}</p>
-                        <p><strong>Apellidos: </strong>{{ $cliente->apellidos }}</p>
-                        <p><strong>Identificación: </strong>{{ $cliente->identificacion }}</p>
-                        <p><strong>Teléfono: </strong>{{ $cliente->telefono }}</p>
-                        <p><strong>Dirección: </strong>{{ $cliente->direccion }}</p>
-                        <p><strong>Referencia: </strong>{{ $cliente->referencia }}</p>
-                        <p><strong>Municipio: </strong>{{ $cliente->municipio }}</p>
-                        <p><strong>Departamento: </strong>{{ $cliente->departamento->nombre }}</p>
-                        <p><strong>Empresa: </strong>{{ $cliente->empresa ? $cliente->empresa->nombre : 'Sin empresa' }}</p>
-                        <p><strong>Cargo: </strong>{{ $cliente->cargo ? : 'Persona individual' }}</p>
+                    <div class="max-w-2xl mx-auto bg-gray-100 dark:bg-gray-800 shadow-md rounded-lg overflow-hidden">
+                        <div class="px-6 py-5 sm:px-8">
+                            <h3 class="text-xl text-center leading-6 font-bold text-gray-900 dark:text-white">Información del Cliente</h3>
+                        </div>
+                        <div class="border-t border-gray-200 dark:border-gray-700">
+                            <dl>
+                                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">ID de Cliente</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->id_cliente + 1000 }}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }}</dd>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Nombre Completo</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->nombre }} {{ $cliente->apellidos }}</dd>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Identificación</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->identificacion }}</dd>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Teléfono</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->telefono }}</dd>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Dirección</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->direccion }}</dd>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Referencia</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->referencia }}</dd>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Municipio</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->municipio }}</dd>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Departamento</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->departamento->nombre }}</dd>
+                                </div>
+                                <div class="bg-gray-50 dark:bg-gray-700 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Empresa</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->empresa ? $cliente->empresa->nombre : 'Sin empresa' }}</dd>
+                                </div>
+                                <div class="bg-gray-100 dark:bg-gray-800 px-6 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-8">
+                                    <dt class="text-base font-medium text-gray-600 dark:text-gray-300">Cargo</dt>
+                                    <dd class="mt-1 text-lg text-gray-900 dark:text-gray-100 sm:mt-0 sm:col-span-2">{{ $cliente->cargo ?: 'Persona individual' }}</dd>
+                                </div>
+                            </dl>
+                        </div>
                     </div>
 
                     <div class="mt-6 flex justify-between">
