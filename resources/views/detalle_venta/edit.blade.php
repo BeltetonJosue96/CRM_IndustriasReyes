@@ -1,4 +1,5 @@
 <x-app-layout>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Editar Detalle de Venta') }}
@@ -112,10 +113,10 @@
                                     <td class="px-4 py-2 text-center">{{ $detalle->costo }}</td>
                                     <td class="px-4 py-2 text-center">{{ $detalle->planManto->nombre }}</td>
                                     <td class="px-4 py-2 text-center">
-                                        <form action="{{ route('detalle_ventas.destroy', $detalle->hashed_id ) }}" method="POST" class="inline">
+                                        <form class="deleteForm" data-id="{{ $detalle->hashed_id }}" action="{{ route('detalle_ventas.destroy', $detalle->hashed_id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¡Atención! ⚠️ Al eliminar este registro, EL mantenimiento asociado quedarán automáticamente eliminado. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
+                                            <button type="submit" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
                                                 🗑️
                                             </button>
                                         </form>
@@ -148,114 +149,51 @@
         let itemCounter = {{ count($detalles) }};
         let totalCost = {{ $detalles->sum('costo') }};
 
-        // Manejo del envío del formulario para agregar un nuevo detalle
-        document.getElementById('detalleVentaForm').addEventListener('submit', function(e) {
-            e.preventDefault();
+        document.addEventListener('DOMContentLoaded', function() {
+            const table = document.getElementById('detallesVentaTable');
 
-            const formData = new FormData(this);
-            const loadingIndicator = document.getElementById('loading');
-            if (loadingIndicator) {
-                loadingIndicator.style.display = 'block';
-            }
+            table.addEventListener('submit', function(e) {
+                if (e.target.classList.contains('deleteForm')) {
+                    e.preventDefault();
 
-            fetch('{{ route('detalle_ventas.store') }}', {
-                method: 'POST',
-                body: formData,
-                headers: {
-                    'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                    'Accept': 'application/json'
-                }
-            })
-                .then(response => response.json())
-                .then(data => {
-                    if (loadingIndicator) {
-                        loadingIndicator.style.display = 'none';
+                    const form = e.target;
+                    const hashedId = form.getAttribute('data-id');
+                    const url = form.getAttribute('action');
+
+                    if (confirm('¡Atención! ⚠️ Al eliminar este registro, EL mantenimiento asociado quedará automáticamente eliminado. ❌ Esta acción NO puede deshacerse. ¿Estás seguro de querer continuar?')) {
+                        fetch(url, {
+                            method: 'POST',
+                            headers: {
+                                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                                'Content-Type': 'application/json',
+                                'Accept': 'application/json',
+                                'X-Requested-With': 'XMLHttpRequest'
+                            },
+                            body: JSON.stringify({
+                                _method: 'DELETE'
+                            })
+                        })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    const row = form.closest('tr');
+                                    row.remove();
+
+                                    // Actualizar el costo total
+                                    totalCost -= parseFloat(data.costo_eliminado);
+                                    document.getElementById('totalCost').innerText = `Q ${totalCost.toFixed(2)}`;
+
+                                } else {
+                                    throw new Error(data.message || 'No se pudo eliminar el detalle.');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                alert('Error: ' + error.message);
+                            });
                     }
-
-                    if (data.success) {
-                        // Limpiar los campos del formulario
-                        this.reset();
-
-                        // Agregar el nuevo detalle a la tabla
-                        const detallesTable = document.getElementById('detallesVentaTable').getElementsByTagName('tbody')[0];
-                        itemCounter++;
-
-                        const newRow = detallesTable.insertRow();
-                        newRow.setAttribute('data-id', data.detalle.hashed_id); // Agregar el hashed_id como atributo para identificar la fila
-                        newRow.innerHTML = `
-                    <td class="px-4 py-2 text-center">${itemCounter}</td>
-                    <td class="px-4 py-2 text-center">${data.detalle.id_detalle}</td>
-                    <td class="px-4 py-2 text-center">${data.detalle.modelo.descripcion}</td>
-                    <td class="px-4 py-2 text-center">${data.detalle.costo}</td>
-                    <td class="px-4 py-2 text-center">${data.detalle.plan_manto}</td>
-                    <td class="px-4 py-2 text-center">
-                            <form class="deleteForm" data-id="${data.detalle.hashed_id}" action="/detalle_ventas/${data.detalle.hashed_id}" method="POST">
-                                <input type="hidden" name="_token" value="{{ csrf_token() }}">
-                                <input type="hidden" name="_method" value="DELETE">
-                                <button type="submit" class="text-red-600 hover:text-red-800">
-                                    🗑️
-                                </button>
-                            </form>
-                        </td>
-                    `;
-
-                        totalCost += parseFloat(data.detalle.costo);
-                        document.getElementById('totalCost').innerText = `Q ${totalCost.toFixed(2)}`;
-                    } else if (data.errors) {
-                        alert('Se encontraron errores. Por favor, revise los campos del formulario.');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Error: ' + (error.response?.data?.message || 'Ha ocurrido un error al procesar la solicitud.'));
-                });
-        });
-
-        // Manejo del envío del formulario para eliminar un detalle
-        document.addEventListener('submit', function(e) {
-            if (e.target.classList.contains('deleteForm')) {
-                e.preventDefault();
-
-                // Mostrar mensaje de confirmación personalizado
-                const confirmDelete = confirm('¡Atención! ⚠️ Al eliminar este registro, EL mantenimiento asociado quedará automáticamente eliminado. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!');
-
-                if (!confirmDelete) {
-                    return; // Si el usuario cancela, no continúa con la eliminación
                 }
-
-                const form = e.target;
-                const hashedId = form.getAttribute('data-id');
-                const url = form.getAttribute('action');
-
-                fetch(url, {
-                    method: 'POST',
-                    headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
-                    },
-                    body: new FormData(form)
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            // Eliminar la fila de la tabla
-                            const rowToDelete = document.querySelector(`tr[data-id="${hashedId}"]`);
-                            if (rowToDelete) {
-                                rowToDelete.remove();
-                            }
-
-                            // Restar el costo eliminado del total
-                            totalCost -= parseFloat(data.costo_eliminado);
-                            document.getElementById('totalCost').innerText = `Q ${totalCost.toFixed(2)}`;
-                        } else {
-                            alert('No se pudo eliminar el detalle.');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error al eliminar el detalle:', error);
-                        alert('Error: ' + (error.response?.data?.message || 'Ha ocurrido un error al eliminar el detalle.'));
-                    });
-            }
+            });
         });
     </script>
 

@@ -1,4 +1,5 @@
 <x-app-layout>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight">
             {{ __('Detalle de Venta') }}
@@ -95,17 +96,17 @@
                             </thead>
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach($detalles as $index => $detalle)
-                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                <tr class="hover:bg-gray-50 dark:hover:bg-gray-700" data-id="{{ $detalle->hashed_id }}">
                                     <td class="px-4 py-2 text-center">{{ $index + 1 }}</td>
                                     <td class="px-4 py-2 text-center">{{ $detalle->id_detalle }}</td>
                                     <td class="px-4 py-2 text-center">{{ $detalle->modelo->codigo }}</td>
                                     <td class="px-4 py-2 text-center">{{ $detalle->costo }}</td>
                                     <td class="px-4 py-2 text-center">{{ $detalle->planManto->nombre }}</td>
                                     <td class="px-4 py-2 text-center">
-                                        <form action="{{ route('detalle_ventas.destroy', $detalle->hashed_id ) }}" method="POST" class="inline">
+                                        <form class="deleteForm" data-id="{{ $detalle->hashed_id }}" action="{{ route('detalle_ventas.destroy', $detalle->hashed_id) }}" method="POST">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" onclick="return confirm('¡Atención! ⚠️ Al eliminar este registro, EL mantenimiento asociado quedarán automáticamente eliminado. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!')" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
+                                            <button type="submit" class="py-2 px-4 rounded bg-red-500 text-white hover:bg-red-700">
                                                 🗑️
                                             </button>
                                         </form>
@@ -143,10 +144,6 @@
             e.preventDefault();
 
             const formData = new FormData(this);
-            const loadingIndicator = document.getElementById('loading');
-            if (loadingIndicator) {
-                loadingIndicator.style.display = 'block';
-            }
 
             fetch('{{ route('detalle_ventas.store') }}', {
                 method: 'POST',
@@ -158,10 +155,6 @@
             })
                 .then(response => response.json())
                 .then(data => {
-                    if (loadingIndicator) {
-                        loadingIndicator.style.display = 'none';
-                    }
-
                     if (data.success) {
                         // Limpiar los campos del formulario
                         this.reset();
@@ -206,11 +199,10 @@
             if (e.target.classList.contains('deleteForm')) {
                 e.preventDefault();
 
-                // Mostrar mensaje de confirmación personalizado
                 const confirmDelete = confirm('¡Atención! ⚠️ Al eliminar este registro, EL mantenimiento asociado quedará automáticamente eliminado. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!');
 
                 if (!confirmDelete) {
-                    return; // Si el usuario cancela, no continúa con la eliminación
+                    return;
                 }
 
                 const form = e.target;
@@ -220,12 +212,21 @@
                 fetch(url, {
                     method: 'POST',
                     headers: {
-                        'X-CSRF-TOKEN': '{{ csrf_token() }}',
-                        'Accept': 'application/json'
+                        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'X-Requested-With': 'XMLHttpRequest'
                     },
-                    body: new FormData(form)
+                    body: JSON.stringify({
+                        _method: 'DELETE'
+                    })
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('Network response was not ok');
+                        }
+                        return response.json();
+                    })
                     .then(data => {
                         if (data.success) {
                             // Eliminar la fila de la tabla
@@ -234,16 +235,17 @@
                                 rowToDelete.remove();
                             }
 
-                            // Restar el costo eliminado del total
+                            // Actualizar el costo total
                             totalCost -= parseFloat(data.costo_eliminado);
                             document.getElementById('totalCost').innerText = `Q ${totalCost.toFixed(2)}`;
+
                         } else {
-                            alert('No se pudo eliminar el detalle.');
+                            throw new Error(data.message || 'No se pudo eliminar el detalle.');
                         }
                     })
                     .catch(error => {
                         console.error('Error al eliminar el detalle:', error);
-                        alert('Error: ' + (error.response?.data?.message || 'Ha ocurrido un error al eliminar el detalle.'));
+                        alert('Error: ' + error.message);
                     });
             }
         });
