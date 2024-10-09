@@ -148,7 +148,7 @@ class ClienteController extends Controller
 
         $cliente->save();
 
-        return redirect()->route('clientes.index')->with('success', '✅ Cliente registrado exitosamente.');
+        return redirect()->route('clientes.index')->with('success', '✅ Cliente registrado correctamente.');
     }
 
     /**
@@ -217,7 +217,7 @@ class ClienteController extends Controller
 
         $cliente->update($request->all());
 
-        return redirect()->route('clientes.index')->with('success', '✅ Cliente actualizado exitosamente.');
+        return redirect()->route('clientes.index')->with('success', '✅ Cliente actualizado correctamente.');
     }
 
     /**

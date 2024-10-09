@@ -40,6 +40,15 @@
                                 <input type="text" name="nombre" id="nombre" value="{{ old('nombre', $producto->nombre) }}"
                                        class="mt-1 block w-full rounded-md border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm">
                             </div>
+                            <script>
+                                document.getElementById('nombre').addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Formatear la primera letra alfabética como mayúscula, incluyendo vocales con acento
+                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-ZÁÉÍÓÚáéíóú])/, function(_, prefix, firstLetter) {
+                                        return prefix + firstLetter.toUpperCase();
+                                    });
+                                });
+                            </script>
                             <div class="flex justify-center">
                                 <x-primary-button>
                                     {{ __('Modificar') }}

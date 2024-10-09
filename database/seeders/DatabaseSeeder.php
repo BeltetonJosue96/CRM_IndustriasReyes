@@ -14,11 +14,6 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(1)->create();
-
-        User::factory()->create([
-            'name' => 'Josué Beltetón',
-            'email' => 'super@industriasreyes.com',
-        ]);
         $this->call(PlanMantoSeeder::class);
         $this->call(DepartamentoSeeder::class);
         $this->call(EstadosSeeder::class);

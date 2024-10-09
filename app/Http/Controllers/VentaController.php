@@ -104,7 +104,7 @@ class VentaController extends Controller
         $venta = Venta::findOrFail($id_venta);
         $venta->delete();
 
-        return redirect()->route('ventas.index');
+        return redirect()->route('ventas.index')->with('success', '✅ ¡Eliminado! La venta se ha borrado correctamente.');
     }
     public function edit($hashedId)
     {

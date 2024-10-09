@@ -25,8 +25,8 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
-            'email' => fake()->unique()->safeEmail(),
+            'name' => 'Josué Beltetón',
+            'email' => 'super@industriasreyes.com',
             'email_verified_at' => now(),
             'password' => '$2y$12$19DsQD0/RAPCIFgvKn58kef0/0eQ0QiegxkTCmG8CRivZ3hkn1YTu', //Acceso heredado
             'remember_token' => Str::random(10),

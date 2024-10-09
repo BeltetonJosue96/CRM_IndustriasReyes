@@ -86,7 +86,7 @@ class ModeloController extends Controller
             'updated_at' => $currentDateTime
         ]);
         $modelo->save();
-        return redirect()->route('modelos.index')->with('success', '✅ El modelo fue registrado exitosamente.');
+        return redirect()->route('modelos.index')->with('success', '✅ Modelo registrado correctamente.');
     }
 
     /**
@@ -132,7 +132,7 @@ class ModeloController extends Controller
 
         $modelo->update($request->all());
 
-        return redirect()->route('modelos.index')->with('success', '✅ El modelo fue actualizado exitosamente.');
+        return redirect()->route('modelos.index')->with('success', '✅ Modelo actualizado correctamente.');
     }
 
     /**

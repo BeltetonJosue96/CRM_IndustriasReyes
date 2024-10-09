@@ -81,7 +81,7 @@ class EmpresaController extends Controller
             'updated_at' => $currentDateTime,
         ]);
         //Se retorna la vista Index y se cargan todos los podructos.
-        return redirect()->route('empresas.index')->with('success', '✅ Empresa registrada exitosamente.');
+        return redirect()->route('empresas.index')->with('success', '✅ Empresa registrada correctamente.');
     }
 
     /**
@@ -145,7 +145,7 @@ class EmpresaController extends Controller
         $empresa = Empresa::findOrFail($id);
         try {
             $empresa->delete();
-            return redirect()->route('empresas.index')->with('success', '✅ Empresa eliminada exitosamente.');
+            return redirect()->route('empresas.index')->with('success', '✅ ¡Eliminada! La empresa se ha borrado correctamente.');
         } catch (QueryException $e) {
             // Capturar el error específico de clave foránea
             if ($e->getCode() == "23000") {
