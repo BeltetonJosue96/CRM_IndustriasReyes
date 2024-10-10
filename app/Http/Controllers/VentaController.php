@@ -155,5 +155,4 @@ class VentaController extends Controller
         // Redirigir al listado de ventas con un mensaje de éxito
         return redirect()->route('ventas.index')->with('success', '✅ Venta actualizada correctamente');
     }
-
 }

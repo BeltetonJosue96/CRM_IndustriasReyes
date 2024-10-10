@@ -65,13 +65,16 @@ Route::middleware('auth')->group(function () {
     Route::get('/detalle_ventas/create/{hashedId}', [DetalleVentaController::class, 'create'])->name('detalle_ventas.create');
     Route::resource('detalle_ventas', DetalleVentaController::class)->except(['create','show']);
 
-
-    Route::resource('checklist', ChecklistController::class);
+    Route::resource('checklist', ChecklistController::class)->parameters([
+        'checklist' => 'hashedId'
+    ]);
     Route::resource('estados', EstadoController::class)->parameters([
         'estados' => 'hashedId'
     ]);
     Route::resource('controlmantos', ControlDeMantoController::class);
-    Route::resource('detallecheck', DetalleCheckController::class);
+    Route::resource('detallecheck', DetalleCheckController::class)->parameters([
+        'detallecheck' => 'hashedId'
+    ]);
     Route::resource('historial', HistorialMantoController::class);
     Route::get('/config', function () {
         return view('config');

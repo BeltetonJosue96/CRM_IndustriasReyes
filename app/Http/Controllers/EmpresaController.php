@@ -27,7 +27,7 @@ class EmpresaController extends Controller
         if ($request->has('search')) {
             $searchTerm = $request->search;
 
-            // Verificamos si el término de búsqueda tiene el formato "ID-año" (Ej. 5001-2024)
+            // Verificamos si el término de búsqueda tiene el formato (Ej. 5001-2024)
             if (preg_match('/^(\d+)-(\d{4})$/', $searchTerm, $matches)) {
                 $hiddenId = (int)$matches[1] - 5000;  // Restamos 5000 para obtener el id_empresa original
                 $year = $matches[2];
