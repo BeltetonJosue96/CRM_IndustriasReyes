@@ -34,37 +34,37 @@
                         <form action="{{ route('detallecheck.update', ['hashedId' => $hashedId]) }}" method="POST">
                             @csrf
                             @method('PUT')
-                            <table class="w-full bg-white shadow-md rounded mb-4">
-                                <thead>
-                                <tr class="bg-gray-200 text-gray-800 uppercase text-sm leading-normal">
-                                    <th class="py-3 px-6 text-left">#</th>
-                                    <th class="py-3 px-6 text-left">Cliente</th>
-                                    <th class="py-3 px-6 text-left">Equipo</th>
-                                    <th class="py-3 px-6 text-left">Plan de Mantenimiento</th>
-                                    <th class="py-3 px-6 text-left">Estado</th>
-                                    <th class="py-3 px-6 text-left">Fecha</th>
-                                    <th class="py-3 px-6 text-left">Observaciones</th>
+                            <table class="mt-6 w-full table-auto items-center">
+                                <thead class="bg-gray-50 dark:bg-gray-700">
+                                <tr>
+                                    <th class="px-4 py-2">#</th>
+                                    <th class="px-4 py-2">Cliente</th>
+                                    <th class="px-4 py-2">Equipo</th>
+                                    <th class="px-4 py-2">Plan de Mantenimiento</th>
+                                    <th class="px-4 py-2">Estado</th>
+                                    <th class="px-4 py-2">Fecha</th>
+                                    <th class="px-4 py-2">Observaciones</th>
                                 </tr>
                                 </thead>
-                                <tbody class="text-gray-80000 text-sm font-light">
+                                <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                                 @foreach($detallesCheck as $index => $detalle)
-                                    <tr class="border-b border-gray-200 hover:bg-gray-100">
-                                        <td class="py-3 px-6 text-left whitespace-nowrap">{{ $index + 1 }}</td>
-                                        <td class="py-3 px-6 text-left">
+                                    <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <td class="px-4 py-2 text-center">{{ $index + 1 }}</td>
+                                        <td class="px-4 py-2 text-center">
                                             ID {{ $detalle->controlDeManto->cliente->id_cliente+1000 }}-{{ \Carbon\Carbon::parse($detalle->controlDeManto->cliente->created_at)->year }} <br>
                                             {{ $detalle->controlDeManto->cliente->nombre }} {{ $detalle->controlDeManto->cliente->apellidos }} <br>
                                             {{ $detalle->controlDeManto->cliente->empresa->nombre }} <br>
                                             Tel: {{ $detalle->controlDeManto->cliente->telefono }}
                                         </td>
-                                        <td class="py-3 px-6 text-left">
+                                        <td class="px-4 py-2 text-center">
                                             Modelo: {{ $detalle->controlDeManto->modelo->codigo }}<br>
                                             Línea: {{ $detalle->controlDeManto->modelo->linea->nombre }}<br>
                                             Producto: {{ $detalle->controlDeManto->modelo->linea->producto->nombre }}
                                         </td>
-                                        <td class="py-3 px-6 text-left">Plan: {{ $detalle->controlDeManto->planManto->nombre }}<br>
+                                        <td class="px-4 py-2 text-center">Plan: {{ $detalle->controlDeManto->planManto->nombre }}<br>
                                             Servicio No. {{ $detalle->controlDeManto->contador }}</td>
-                                        <td class="py-3 px-6 text-left">
-                                            <select name="estados[{{ $detalle->id_detalle_check }}]" class="form-select mt-1 block w-full">
+                                        <td class="px-4 py-2">
+                                            <select name="estados[{{ $detalle->id_detalle_check }}]" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
                                                 @foreach($estados as $estado)
                                                     <option value="{{ $estado->id_estado }}" {{ $detalle->id_estado == $estado->id_estado ? 'selected' : '' }}>
                                                         {{ $estado->estado }}
@@ -72,25 +72,25 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="py-3 px-6 text-left">
-                                            <input type="date" name="fecha_manto[{{ $detalle->id_detalle_check }}]" value="{{ $detalle->fecha_manto }}" class="form-input mt-1 block w-full">
+                                        <td class="px-4 py-2">
+                                            <input type="date" name="fecha_manto[{{ $detalle->id_detalle_check }}]" value="{{ $detalle->fecha_manto }}" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
                                         </td>
-                                        <td class="py-3 px-6 text-left">
-                                            <input type="text" id="observaciones" name="observaciones[{{ $detalle->id_detalle_check }}]" value="{{ $detalle->observaciones }}" class="form-input mt-1 block w-full" placeholder="Aclaraciones">
+                                        <td class="px-4 py-2">
+                                            <input type="text" id="observaciones" name="observaciones[{{ $detalle->id_detalle_check }}]" value="{{ $detalle->observaciones }}" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Aclaraciones">
                                         </td>
-                                        <script>
-                                            document.getElementById('observaciones').addEventListener('input', function (e) {
-                                                let inputValue = e.target.value;
-                                                // Formatear la primera letra alfabética como mayúscula, incluyendo vocales con acento
-                                                e.target.value = inputValue.replace(/^(.*?)([a-zA-ZÁÉÍÓÚáéíóú])/, function(_, prefix, firstLetter) {
-                                                    return prefix + firstLetter.toUpperCase();
-                                                });
-                                            });
-                                        </script>
                                     </tr>
                                 @endforeach
                                 </tbody>
                             </table>
+                            <script>
+                                document.getElementById('observaciones').addEventListener('input', function (e) {
+                                    let inputValue = e.target.value;
+                                    // Formatear la primera letra alfabética como mayúscula, incluyendo vocales con acento
+                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-ZÁÉÍÓÚáéíóú])/, function(_, prefix, firstLetter) {
+                                        return prefix + firstLetter.toUpperCase();
+                                    });
+                                });
+                            </script>
                             <div class="flex justify-center mt-4">
                                 <x-primary-button type="submit">
                                     Guardar Cambios
