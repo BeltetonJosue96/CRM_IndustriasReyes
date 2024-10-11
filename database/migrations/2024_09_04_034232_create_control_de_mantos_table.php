@@ -20,7 +20,6 @@ return new class extends Migration
             $table->date('fecha_venta')->nullable();
             $table->date('proximo_manto')->nullable();
             $table->integer('contador');
-            $table->timestamps();
 
             // Foreign key constraints
             $table->foreign('id_detalle')->references('id_detalle')->on('detalle_venta')->onDelete('cascade');

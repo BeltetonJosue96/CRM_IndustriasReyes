@@ -64,16 +64,18 @@ return new class extends Migration {
             BEFORE INSERT ON `control_de_manto`
             FOR EACH ROW
             BEGIN
-                IF NEW.id_plan_manto = 1 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 2 MONTH);
-                ELSEIF NEW.id_plan_manto = 2 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 3 MONTH);
-                ELSEIF NEW.id_plan_manto = 3 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 4 MONTH);
-                ELSEIF NEW.id_plan_manto = 4 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 6 MONTH);
-                ELSE
-                    SET NEW.proximo_manto = NULL;
+                IF NEW.fecha_venta IS NOT NULL THEN
+                    IF NEW.id_plan_manto = 1 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 2 MONTH);
+                    ELSEIF NEW.id_plan_manto = 2 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 3 MONTH);
+                    ELSEIF NEW.id_plan_manto = 3 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 4 MONTH);
+                    ELSEIF NEW.id_plan_manto = 4 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 6 MONTH);
+                    ELSE
+                        SET NEW.proximo_manto = NULL;
+                    END IF;
                 END IF;
             END;
         ");
@@ -83,16 +85,18 @@ return new class extends Migration {
             BEFORE UPDATE ON `control_de_manto`
             FOR EACH ROW
             BEGIN
-                IF NEW.id_plan_manto = 1 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 2 MONTH);
-                ELSEIF NEW.id_plan_manto = 2 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 3 MONTH);
-                ELSEIF NEW.id_plan_manto = 3 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 4 MONTH);
-                ELSEIF NEW.id_plan_manto = 4 THEN
-                    SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 6 MONTH);
-                ELSE
-                    SET NEW.proximo_manto = NULL;
+                IF NEW.fecha_venta IS NOT NULL THEN
+                    IF NEW.id_plan_manto = 1 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 2 MONTH);
+                    ELSEIF NEW.id_plan_manto = 2 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 3 MONTH);
+                    ELSEIF NEW.id_plan_manto = 3 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 4 MONTH);
+                    ELSEIF NEW.id_plan_manto = 4 THEN
+                        SET NEW.proximo_manto = DATE_ADD(NEW.fecha_venta, INTERVAL 6 MONTH);
+                    ELSE
+                        SET NEW.proximo_manto = NULL;
+                    END IF;
                 END IF;
             END;
         ");
