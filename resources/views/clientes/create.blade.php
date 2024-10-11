@@ -115,7 +115,7 @@
                                     <option value="" disabled selected>Seleccione la Empresa</option>
                                     <option value="">Sin empresa</option>
                                     @foreach($Empresas as $empresa)
-                                        <option value="{{ $empresa->id_empresa }}">ID: {{ $empresa->id_empresa + 5000}}-{{ \Carbon\Carbon::parse($empresa->created_at)->year }} - {{ $empresa->nombre }}</option>
+                                        <option value="{{ $empresa->id_empresa }}">{{ $empresa->nombre }}</option>
                                     @endforeach
                                 </select>
                             </div>
