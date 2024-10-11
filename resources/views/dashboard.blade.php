@@ -40,7 +40,7 @@
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
-                            <a href="{{ route('historial.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                            <a href="{{ route('reportes') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
                                 <img src="https://cdn-icons-png.freepik.com/256/2936/2936725.png" alt="Reportes" class="w-20 h-20 mr-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Reportes</span>
                             </a>

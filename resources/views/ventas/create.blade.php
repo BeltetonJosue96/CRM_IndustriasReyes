@@ -78,7 +78,7 @@
                                     <option value="" disabled selected>Seleccione el Cliente</option>
                                     @foreach($Clientes as $cliente)
                                         <option value="{{ $cliente->id_cliente}}">
-                                            ID: {{ $cliente->id_cliente + 1000 }}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }} -
+                                            ID: {{ $cliente->id_cliente + 1000 }}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }}<br>
                                             {{ $cliente->nombre }} {{ $cliente->apellidos }} -
                                             {{ $cliente->nombre_empresa }}
                                         </option>

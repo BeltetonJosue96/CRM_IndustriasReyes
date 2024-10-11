@@ -75,7 +75,7 @@
                         </a>
 
                         <!-- Botón de eliminar -->
-                        <form action="{{ route('clientes.destroy', $cliente->hashed_id ) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este cliente?');">
+                        <form action="{{ route('clientes.destroy', $cliente->hashed_id ) }}" method="POST" onsubmit="return confirm('¡Atención! ⚠️ Al eliminar este cliente, TODAS las dependencias quedarán automáticamente eliminadas. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!');">
                             @csrf
                             @method('DELETE')
                             <button type="submit">

@@ -8,6 +8,7 @@ use App\Http\Controllers\ModeloController;
 use App\Http\Controllers\DepartamentoController;
 use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\ReportesController;
 use App\Http\Controllers\VentaController;
 use App\Http\Controllers\PlanMantoController;
 use App\Http\Controllers\DetalleVentaController;
@@ -80,9 +81,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/detallecheck/store/{hashedId}', [DetalleCheckController::class, 'store'])->name('detallecheck.store');
 
     Route::resource('historial', HistorialMantoController::class);
+
     Route::get('/config', function () {
         return view('config');
     })->name('config');
+
+    Route::get('/reportes', [ReportesController::class, 'index'])->name('reportes');
+    Route::get('/reportes/exportar-pdf', [ReportesController::class, 'exportarPdf'])->name('reportes.exportar_pdf');
+
 });
 
 require __DIR__.'/auth.php';
