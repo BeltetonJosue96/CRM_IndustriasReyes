@@ -36,6 +36,15 @@ class ControlDeManto extends Model
     {
         return $this->belongsTo(Modelo::class, 'id_modelo');
     }
+    public function producto()
+    {
+        return $this->belongsTo(Producto::class, 'id_producto');
+    }
+
+    public function linea()
+    {
+        return $this->belongsTo(Linea::class, 'id_linea');
+    }
 
     // Relación con la tabla 'plan_manto'
     public function planManto()

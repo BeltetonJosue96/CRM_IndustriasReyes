@@ -72,9 +72,13 @@ Route::middleware('auth')->group(function () {
         'estados' => 'hashedId'
     ]);
     Route::resource('controlmantos', ControlDeMantoController::class);
+
     Route::resource('detallecheck', DetalleCheckController::class)->parameters([
         'detallecheck' => 'hashedId'
     ]);
+    Route::get('/detallecheck/create/{hashedId}', [DetalleCheckController::class, 'create'])->name('detallecheck.create');
+    Route::post('/detallecheck/store/{hashedId}', [DetalleCheckController::class, 'store'])->name('detallecheck.store');
+
     Route::resource('historial', HistorialMantoController::class);
     Route::get('/config', function () {
         return view('config');

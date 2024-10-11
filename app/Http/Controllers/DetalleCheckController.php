@@ -138,22 +138,28 @@ class DetalleCheckController extends Controller
         return view('detalle_check.edit', compact('check', 'detallesCheck', 'estados', 'hashedId'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update($hashedId)
+    public function update(Request $request, $hashedId)
     {
         $id_check = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_check) {
             abort(404);
         }
 
+        // Validar los datos de entrada
+        $validated = $request->validate([
+            'fecha_manto.*' => 'date',
+            'estado.*' => 'required|exists:estados,id',
+            'observaciones.*' => 'nullable|string',
+        ]);
+
+        $fecha_manto = $request->input('fecha_manto', []);
         $estados = $request->input('estados', []);
         $observaciones = $request->input('observaciones', []);
 
         foreach ($estados as $id_detalle_check => $id_estado) {
             DetalleCheck::where('id_detalle_check', $id_detalle_check)
                 ->update([
+                    'fecha_manto' => $fecha_manto[$id_detalle_check] ?? null,
                     'id_estado' => $id_estado,
                     'observaciones' => $observaciones[$id_detalle_check] ?? null,
                 ]);

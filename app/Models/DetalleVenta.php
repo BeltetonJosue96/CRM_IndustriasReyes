@@ -24,5 +24,9 @@ class DetalleVenta extends Model
     {
         return $this->belongsTo(PlanManto::class, 'id_plan_manto');
     }
+    public function controlDeManto()
+    {
+        return $this->hasOne(ControlDeManto::class, 'id_detalle');
+    }
 
 }

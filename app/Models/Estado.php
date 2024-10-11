@@ -10,4 +10,5 @@ class Estado extends Model
     use HasFactory;
     protected $table = 'estado';
     protected $primaryKey = 'id_estado';
+    protected $fillable = ['estado'];
 }
