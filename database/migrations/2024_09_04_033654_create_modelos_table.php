@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('modelo', function (Blueprint $table) {
             $table->id('id_modelo')->unique(); // AUTO_INCREMENT id
             $table->string('codigo', 45)->unique(); // Unique key on 'codigo'
-            $table->string('descripcion', 45);
+            $table->string('descripcion', 145);
             $table->unsignedBigInteger('id_linea'); // Foreign key
 
             $table->foreign('id_linea')->references('id_linea')->on('linea')

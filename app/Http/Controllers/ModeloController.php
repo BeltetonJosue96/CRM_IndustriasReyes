@@ -66,14 +66,14 @@ class ModeloController extends Controller
     {
         $request->validate([
             'codigo' => 'required|max:45|unique:modelo',
-            'descripcion' => 'required|max:45',
+            'descripcion' => 'required|max:145',
             'id_linea' => 'required|exists:linea,id_linea',
         ], [
             'codigo.required' => 'El campo código es obligatorio.',
             'codigo.max' => 'El código no puede tener más de 45 caracteres.',
             'codigo.unique' => 'Este código ya está registrado.',
             'descripcion.required' => 'La descripción es obligatoria.',
-            'descripcion.max' => 'La descripción no puede tener más de 45 caracteres.',
+            'descripcion.max' => 'La descripción no puede tener más de 145 caracteres.',
             'id_linea.required' => 'Debe seleccionar una línea.',
             'id_linea.exists' => 'La línea seleccionada no es válida.',
         ]);
@@ -124,7 +124,7 @@ class ModeloController extends Controller
         $modelo = Modelo::findOrFail($id_modelo);
         $request->validate([
             'codigo' => 'required|max:45|unique:modelo,codigo,' . $modelo->id_modelo . ',id_modelo',
-            'descripcion' => 'required|max:45',
+            'descripcion' => 'required|max:145',
             'id_linea' => 'required|integer|exists:linea,id_linea',
         ]);
         $currentDateTime = Carbon::now('America/Guatemala');
