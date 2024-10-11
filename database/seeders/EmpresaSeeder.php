@@ -38,7 +38,8 @@ class EmpresaSeeder extends Seeder
             'Rest El Safari',
             'Maxim Express',
             'Que Dely',
-            'Pollo Landia'
+            'Pollo Landia',
+            'Xiomaras Cafe'
         ];
 
         foreach ($empresas as $empresa) {
