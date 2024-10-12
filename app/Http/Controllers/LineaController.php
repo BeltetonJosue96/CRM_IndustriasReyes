@@ -21,22 +21,29 @@ class LineaController extends Controller
     }
     public function index(Request $request)
     {
-        $query = Linea::query();
-        // Si se incluye un término de búsqueda, se filtra por nombre o ID del producto
+        $query = Linea::with('producto'); // Aseguramos que cargamos la relación con producto
+
+        // Si se incluye un término de búsqueda, se filtra por nombre de la línea o del producto
         if ($request->has('search')) {
             $searchTerm = $request->search;
-            $query->where('nombre', 'LIKE', "%{$searchTerm}%")
-                ->orWhere('id_linea', 'LIKE', "%{$searchTerm}%");
+
+            $query->where('nombre', 'LIKE', "%{$searchTerm}%") // Búsqueda por nombre de la línea
+            ->orWhereHas('producto', function($q) use ($searchTerm) { // Búsqueda por nombre del producto
+                $q->where('nombre', 'LIKE', "%{$searchTerm}%");
+            });
         }
 
         $lineas = $query->paginate(10);
 
+        // Codificamos el ID usando Hashids
         $lineas->getCollection()->transform(function ($linea) {
             $linea->hashed_id = $this->hashids->encode($linea->id_linea);
             return $linea;
         });
+
         return view('linea.index', compact('lineas'));
     }
+
 
     /**
      * Show the form for creating a new resource.

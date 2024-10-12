@@ -37,6 +37,8 @@ class ChecklistController extends Controller
             if (preg_match('/^(\d+)-(\d{4})$/', $searchTerm, $matches)) {
                 $hiddenId = (int)$matches[1] - 8000;
                 $year = $matches[2];
+
+                // Buscamos por id_cliente y el año de creación
                 $query->where('id_check', $hiddenId)
                     ->whereYear('created_at', $year);
             } else {
@@ -53,11 +55,13 @@ class ChecklistController extends Controller
         }
 
         $checks = $query->paginate(10);
+
         $checks->getCollection()->transform(function ($check) {
             $check->hashed_id = $this->hashids->encode($check->id_check);
+            $check->search_id = ($check->id_check + 8000) . '-' .
+                ($check->created_at ? $check->created_at->format('Y') : 'XXXX');
             return $check;
         });
-
         return view('checklist.index', compact('checks'));
     }
 

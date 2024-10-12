@@ -69,7 +69,7 @@
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($checks as $check)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td class="px-4 py-2 text-center">{{ $check->id_check+8000 }} - {{ \Carbon\Carbon::parse($check->created_at)->year }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $check->search_id }}</td>
                                     <td class="px-4 py-2 text-center">{{ \Carbon\Carbon::parse($check->fecha_creacion)->format('d/m/Y') }}</td>
                                     <td class="px-4 py-2 text-center">{{ $check->planManto->nombre }}</td>
                                     <td class="px-4 py-2">
