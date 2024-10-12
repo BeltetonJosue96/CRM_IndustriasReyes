@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 use Hashids\Hashids;
+use Illuminate\Support\Facades\Log;
 
 class ClienteController extends Controller
 {
@@ -25,7 +26,6 @@ class ClienteController extends Controller
 
         if ($request->has('search')) {
             $searchTerm = $request->search;
-
             // Si el término de búsqueda tiene el formato ID-año, tratamos de separar ambas partes
             if (preg_match('/^(\d+)-(\d{4})$/', $searchTerm, $matches)) {
                 $hiddenId = (int)$matches[1] - 1000;  // Restamos 1000 para obtener el id_cliente original
@@ -38,7 +38,8 @@ class ClienteController extends Controller
                 // Búsqueda por nombre, apellidos o empresa
                 $query->where(function ($query) use ($searchTerm) {
                     $query->where('nombre', 'LIKE', "%{$searchTerm}%")
-                        ->orWhere('apellidos', 'LIKE', "%{$searchTerm}%");
+                        ->orWhere('apellidos', 'LIKE', "%{$searchTerm}%")
+                        ->orWhere(DB::raw("CONCAT(id_cliente + 1000, '-', COALESCE(YEAR(created_at), 'XXXX'))"), 'LIKE', "%{$searchTerm}%");
 
                     if (strtolower($searchTerm) === 'sin empresa') {
                         $query->orWhereNull('id_empresa');
@@ -55,15 +56,14 @@ class ClienteController extends Controller
 
         $clientes->getCollection()->transform(function ($cliente) {
             $cliente->hashed_id = $this->hashids->encode($cliente->id_cliente);
+            $cliente->search_id = ($cliente->id_cliente + 1000) . '-' .
+                ($cliente->created_at ? $cliente->created_at->format('Y') : 'XXXX');
             return $cliente;
         });
 
         return view('clientes.index', compact('clientes'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
         // Recuperar los departamentos y las empresas

@@ -37,7 +37,7 @@
                     <div class="flex flex-col items-center mt-2">
                         <form action="{{ route('clientes.index') }}" method="GET" class="flex items-center space-x-2">
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar cliente..." class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
-                            <x-primary-button class="ms-1">
+                            <x-primary-button type="submit" class="ms-1">
                                 🔍
                             </x-primary-button>
                         </form>
@@ -76,7 +76,7 @@
                             <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
                             @foreach ($clientes as $cliente)
                                 <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-                                    <td class="px-4 py-2 text-center">{{ $cliente->id_cliente + 1000}}-{{ \Carbon\Carbon::parse($cliente->created_at)->year }}</td>
+                                    <td class="px-4 py-2 text-center">{{ $cliente->search_id }}</td>
                                     <td class="px-4 py-2 text-center">{{ $cliente->nombre }}</td>
                                     <td class="px-4 py-2 text-center">{{ $cliente->apellidos }}</td>
                                     <td class="px-4 py-2 text-center">

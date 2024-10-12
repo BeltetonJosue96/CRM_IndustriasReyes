@@ -23,6 +23,8 @@ class Cliente extends Model
         'referencia',
         'municipio',
         'id_departamento',
+        'created_at',
+        'updated_at',
     ];
     // Relación con Empresa
     public function empresa()
