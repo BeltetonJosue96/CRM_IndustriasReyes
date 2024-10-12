@@ -85,7 +85,7 @@
                                     <td class="px-4 py-2">
                                         <div class="flex justify-center items-center space-x-2">
                                             <a href="{{ route('clientes.show', $cliente->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
-                                                🔎
+                                                🧾
                                             </a>
                                             <a href="{{ route('clientes.edit', $cliente->hashed_id ) }}" class="py-2 px-4 rounded bg-blue-500 text-white hover:bg-blue-700">
                                                 ✍️

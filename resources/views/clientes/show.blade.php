@@ -60,20 +60,18 @@
                     </div>
 
                     <div class="mt-6 flex justify-between">
-                        <!-- Botón de regresar -->
-                        <a href="{{ route('clientes.index') }}" >
-                            <x-primary-button class="ms-3">
-                                {{ __('Regresar') }}
-                            </x-primary-button>
-                        </a>
-
                         <!-- Botón de modificar -->
                         <a href="{{ route('clientes.edit', $cliente->hashed_id ) }}" >
                             <x-primary-button class="ms-3">
                                 {{ __('Modificar') }}
                             </x-primary-button>
                         </a>
-
+                        <!-- Botón de regresar -->
+                        <a href="{{ route('clientes.index') }}" >
+                            <x-primary-button class="ms-3">
+                                {{ __('🔴 Regresar') }}
+                            </x-primary-button>
+                        </a>
                         <!-- Botón de eliminar -->
                         <form action="{{ route('clientes.destroy', $cliente->hashed_id ) }}" method="POST" onsubmit="return confirm('¡Atención! ⚠️ Al eliminar este cliente, TODAS las dependencias quedarán automáticamente eliminadas. ❌ Esta acción NO puede deshacerse. ¡Piénsalo bien antes de continuar!');">
                             @csrf
