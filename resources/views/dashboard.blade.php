@@ -46,12 +46,6 @@
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
-                            <a href="{{ route('config') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/3315/3315581.png" alt="Configuracion" class="w-20 h-20 mr-2">
-                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Configuraciones</span>
-                            </a>
-                        </div>
-                        <div class="w-full flex justify-center">
                             <a href="https://drive.google.com/drive/folders/19gGBlRfmZxMRptKaVJ5F6Cq1Z4nggYDs?usp=share_link" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800" target="_blank" rel="noopener noreferrer">
                                 <img src="https://cdn-icons-png.freepik.com/256/16939/16939373.png" alt="Configuracion" class="w-20 h-20 mr-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Manual del usuario</span>
@@ -63,6 +57,12 @@
                                target="_blank" rel="noopener noreferrer">
                                 <img src="https://cdn-icons-png.freepik.com/256/15560/15560030.png" alt="Configuracion" class="w-20 h-20 mr-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Soporte Técnico</span>
+                            </a>
+                        </div>
+                        <div class="w-full flex justify-center">
+                            <a href="{{ route('config') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
+                                <img src="https://cdn-icons-png.freepik.com/256/3315/3315581.png" alt="Configuracion" class="w-20 h-20 mr-2">
+                                <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">Configuraciones</span>
                             </a>
                         </div>
                     </div>

@@ -10,7 +10,7 @@ class Checklist extends Model
     use HasFactory;
     protected $table = 'checklist';
     protected $primaryKey = 'id_check';
-    protected $fillable = ['fecha_creacion','id_plan_manto'];
+    protected $fillable = ['fecha_creacion','id_plan_manto','created_at','updated_at'];
     public function planManto()
     {
         return $this->belongsTo(PlanManto::class, 'id_plan_manto');

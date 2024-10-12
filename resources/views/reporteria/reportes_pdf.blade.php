@@ -31,10 +31,6 @@
         .header h2 {
             margin: 0;
         }
-        .summary {
-            margin-top: 20px;
-            text-align: right;
-        }
     </style>
 </head>
 <body>
@@ -62,8 +58,8 @@
     <thead>
     <tr>
         <th>#</th>
-        <th>ID Modelo</th>
-        <th>ID Plan Manto</th>
+        <th>Bien o Servicio</th>
+        <th>Plan de Mantenimiento</th>
         <th>Costo (Q)</th>
     </tr>
     </thead>
@@ -74,8 +70,12 @@
     @foreach($detalles as $detalle)
         <tr>
             <td>{{ $iterator++ }}</td>
-            <td>{{ $detalle->id_modelo }}</td>
-            <td>{{ $detalle->id_plan_manto }}</td>
+            <td>
+                {{ $detalle->modelo->codigo }} -
+                {{ $detalle->modelo->linea->nombre }} -
+                {{ $detalle->modelo->linea->producto->nombre }}
+            </td>
+            <td>{{ $detalle->planManto->nombre }}</td>
             <td>{{ number_format($detalle->costo, 2) }}</td>
         </tr>
     @endforeach
@@ -83,7 +83,7 @@
     <tfoot>
     <tr>
         <td colspan="3" style="text-align: right; font-weight: bold;">Total:</td>
-        <td style="font-weight: bold;">{{ number_format($total, 2) }} Q</td>
+        <td style="font-weight: bold;">Q {{ number_format($total, 2) }}</td>
     </tr>
     </tfoot>
 </table>

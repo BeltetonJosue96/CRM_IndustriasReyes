@@ -49,14 +49,6 @@
                                 <label for="fecha_creacion" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Fecha de Creación</label>
                                 <input type="date" name="fecha_creacion" id="fecha_creacion" value="{{ old('fecha_creacion', $check->fecha_creacion) }}" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
                             </div>
-                            <script>
-                                // Obtener la fecha actual en formato YYYY-MM-DD
-                                const today = new Date().toISOString().split('T')[0];
-
-                                // Asignar la fecha actual como valor predeterminado
-                                document.getElementById('fecha_creacion').value = today;
-                            </script>
-
                             <div class="flex items-center">
                                 <label for="id_plan_manto" class="block text-lg font-medium text-gray-700 dark:text-gray-300 pr-4">Plan de Mantenimiento</label>
                                 <select name="id_plan_manto" id="id_plan_manto" class="form-control w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>

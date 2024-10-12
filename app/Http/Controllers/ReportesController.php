@@ -32,8 +32,8 @@ class ReportesController extends Controller
         $fecha_inicio = $request->input('fecha_inicio');
         $fecha_fin = $request->input('fecha_fin');
 
-        // Inicializar la consulta de DetalleVenta
-        $detallesQuery = DetalleVenta::with(['venta.cliente']);
+        // Inicializar la consulta de DetalleVenta con relaciones adicionales
+        $detallesQuery = DetalleVenta::with(['venta.cliente', 'modelo.linea.producto', 'planManto']);
 
         // Filtrar por Cliente o Empresa
         if ($id_cliente) {
@@ -72,7 +72,7 @@ class ReportesController extends Controller
         // Calcular el total
         $total = $detallesQuery->sum('costo');
 
-        return view('reportes', compact('detalles', 'clientes', 'empresas', 'id_cliente', 'id_empresa', 'fecha_inicio', 'fecha_fin', 'total'));
+        return view('reporteria.reportes', compact('detalles', 'clientes', 'empresas', 'id_cliente', 'id_empresa', 'fecha_inicio', 'fecha_fin', 'total'));
     }
 
     public function exportarPdf(Request $request)
@@ -91,8 +91,8 @@ class ReportesController extends Controller
         $fecha_inicio = $request->input('fecha_inicio');
         $fecha_fin = $request->input('fecha_fin');
 
-        // Inicializar la consulta de DetalleVenta
-        $detallesQuery = DetalleVenta::with(['venta.cliente']);
+        // Inicializar la consulta de DetalleVenta con relaciones adicionales
+        $detallesQuery = DetalleVenta::with(['venta.cliente', 'modelo.linea.producto', 'planManto']);
 
         // Filtrar por Cliente o Empresa
         if ($id_cliente) {
@@ -147,13 +147,12 @@ class ReportesController extends Controller
         }
 
         // Generar el PDF
-        $pdf = Pdf::loadView('reportes_pdf', compact('detalles', 'total', 'id_cliente', 'id_empresa', 'fecha_inicio', 'fecha_fin', 'cliente', 'empresa', 'departamento'));
+        $pdf = Pdf::loadView('reporteria.reportes_pdf', compact('detalles', 'total', 'id_cliente', 'id_empresa', 'fecha_inicio', 'fecha_fin', 'cliente', 'empresa', 'departamento'));
 
-        // Opcional: Configurar opciones de tamaño y orientación
+        // Configurar opciones de tamaño y orientación
         $pdf->setPaper('A4', 'portrait');
 
         // Descargar el PDF
         return $pdf->download('reporte_ventas.pdf');
     }
-
 }
