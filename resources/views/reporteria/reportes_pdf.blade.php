@@ -37,7 +37,8 @@
 <div class="header">
     <img src="{{ public_path('images/circular.png') }}" alt="Logo Empresa" style="width: 100px; height: auto;">
     <h2>Reporte de Ventas</h2>
-    <p>Fecha de Generación: {{ \Carbon\Carbon::now()->format('d/m/Y') }}</p>
+    <p>Fecha de Generación: {{ \Carbon\Carbon::now()->format('d/m/Y H:i') }}</p>
+    <p>Generado por: {{ Auth::user()->name }}</p>
     @if($id_cliente)
         <p><strong>Cliente:</strong> {{ $cliente->nombre }} {{ $cliente->apellidos }}</p>
         <p><strong>Empresa:</strong> {{ $empresa ? $empresa->nombre : 'N/A' }}</p>
@@ -57,10 +58,13 @@
 <table>
     <thead>
     <tr>
-        <th>#</th>
-        <th>Bien o Servicio</th>
-        <th>Plan de Mantenimiento</th>
-        <th>Costo (Q)</th>
+        <th style="text-align: center">#</th>
+        <th style="text-align: center">Cliente</th>
+        <th style="text-align: center">Fecha de Venta</th>
+        <th style="text-align: center">No. Venta</th>
+        <th style="text-align: center">Bien o Servicio</th>
+        <th style="text-align: center">Plan de<br>Mantenimiento</th>
+        <th style="text-align: center">Costo (Q)</th>
     </tr>
     </thead>
     <tbody>
@@ -69,20 +73,26 @@
     @endphp
     @foreach($detalles as $detalle)
         <tr>
-            <td>{{ $iterator++ }}</td>
+            <td style="text-align: center">{{ $iterator++ }}</td>
             <td>
-                {{ $detalle->modelo->codigo }} -
-                {{ $detalle->modelo->linea->nombre }} -
+                {{ $detalle->venta->cliente->nombre }}<br>
+                {{ $detalle->venta->cliente->apellidos }}
+            </td>
+            <td style="text-align: center">{{ \Carbon\Carbon::parse($detalle->venta->fecha_venta)->format('d/m/Y') }}</td>
+            <td style="text-align: center">{{ $detalle->id_venta }} - {{ $detalle->venta->created_at->format('Y') }}</td>
+            <td>
+                {{ $detalle->modelo->codigo }}<br>
+                {{ $detalle->modelo->linea->nombre }}<br>
                 {{ $detalle->modelo->linea->producto->nombre }}
             </td>
-            <td>{{ $detalle->planManto->nombre }}</td>
-            <td>{{ number_format($detalle->costo, 2) }}</td>
+            <td style="text-align: center">{{ $detalle->planManto->nombre }}</td>
+            <td style="text-align: right">{{ number_format($detalle->costo, 2) }}</td>
         </tr>
     @endforeach
     </tbody>
     <tfoot>
     <tr>
-        <td colspan="3" style="text-align: right; font-weight: bold;">Total:</td>
+        <td colspan="6" style="text-align: right; font-weight: bold;">Total:</td>
         <td style="font-weight: bold;">Q {{ number_format($total, 2) }}</td>
     </tr>
     </tfoot>
