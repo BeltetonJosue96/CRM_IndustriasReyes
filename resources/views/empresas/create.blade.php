@@ -46,10 +46,7 @@
                             function formatInputToUpperCase(element) {
                                 element.addEventListener('input', function (e) {
                                     let inputValue = e.target.value;
-                                    // Solo permitir letras (mayúsculas y minúsculas), tildes y espacios
                                     let formattedValue = inputValue.replace(/[^a-zA-ZÀ-ÿ\s.]/g, '');
-
-                                    // Convertir la primera letra de cada palabra a mayúscula sin afectar acentos y ñ
                                     formattedValue = formattedValue.replace(/(?:^|\s)([a-záéíóúñ])/g, function (match, char) {
                                         return match.replace(char, char.toUpperCase());
                                     });

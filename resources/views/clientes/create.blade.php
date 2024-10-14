@@ -51,10 +51,7 @@
                             </div>
                             <script>
                                 function formatIdentification(input) {
-                                    // Convertir a mayúsculas
                                     input.value = input.value.toUpperCase();
-
-                                    // Eliminar todo lo que no sea letras mayúsculas (A-Z) o números (0-9)
                                     input.value = input.value.replace(/[^A-Z0-9]/g, '');
                                 }
                             </script>
@@ -66,9 +63,7 @@
 
                             <script>
                                 function validatePhone(input) {
-                                    // Eliminar cualquier carácter que no sea un número
                                     input.value = input.value.replace(/[^0-9]/g, '');
-                                    // Limitar la longitud a 8 caracteres
                                     if (input.value.length > 8) {
                                         input.value = input.value.slice(0, 8);
                                     }
@@ -87,7 +82,6 @@
                             <script>
                                 document.getElementById('referencia').addEventListener('input', function (e) {
                                     let inputValue = e.target.value;
-                                    // Formatear la primera letra alfabética como mayúscula
                                     e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
                                         return prefix + firstLetter.toUpperCase();
                                     });
@@ -130,10 +124,7 @@
                             function formatInputToUpperCase(element) {
                                 element.addEventListener('input', function (e) {
                                     let inputValue = e.target.value;
-                                    // Solo permitir letras (mayúsculas y minúsculas), tildes y espacios
                                     let formattedValue = inputValue.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
-
-                                    // Convertir la primera letra de cada palabra a mayúscula sin afectar acentos y ñ
                                     formattedValue = formattedValue.replace(/(?:^|\s)([a-záéíóúñ])/g, function (match, char) {
                                         return match.replace(char, char.toUpperCase());
                                     });
@@ -141,7 +132,7 @@
                                     e.target.value = formattedValue;
                                 });
                             }
-                            // Aplicar la función de formato a los campos de nombre y apellidos
+
                             formatInputToUpperCase(document.getElementById('nombre'));
                             formatInputToUpperCase(document.getElementById('apellidos'));
                             formatInputToUpperCase(document.getElementById('municipio'));

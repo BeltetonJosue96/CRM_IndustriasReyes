@@ -41,14 +41,11 @@
                             </div>
                             <script>
                                 function validatePrecio(input) {
-                                    // Permitir solo números y un solo punto
-                                    input.value = input.value.replace(/[^0-9.]/g, '');  // Permitir números y puntos
-                                    // Verificar si ya hay más de un punto
+                                    input.value = input.value.replace(/[^0-9.]/g, '');
                                     let parts = input.value.split('.');
                                     if (parts.length > 2) {
-                                        input.value = parts[0] + '.' + parts[1];  // Si hay más de un punto, se permite solo el primero
+                                        input.value = parts[0] + '.' + parts[1];
                                     }
-                                    // Limitar los decimales a dos cifras después del punto
                                     if (parts.length === 2 && parts[1].length > 2) {
                                         input.value = parts[0] + '.' + parts[1].substring(0, 2);
                                     }

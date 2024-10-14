@@ -55,7 +55,6 @@
                             <script>
                                 document.getElementById('descripcion').addEventListener('input', function (e) {
                                     let inputValue = e.target.value;
-                                    // Formatear la primera letra alfabética como mayúscula, incluyendo vocales con acento
                                     e.target.value = inputValue.replace(/^(.*?)([a-zA-ZÁÉÍÓÚáéíóú])/, function(_, prefix, firstLetter) {
                                         return prefix + firstLetter.toUpperCase();
                                     });

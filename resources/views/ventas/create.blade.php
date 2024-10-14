@@ -51,10 +51,7 @@
                                 <input type="date" name="fecha_venta" id="fecha_venta" class="w-full p-3 border border-gray-300 rounded-lg dark:bg-gray-800 dark:border-gray-600 dark:text-white" required>
                             </div>
                             <script>
-                                // Obtener la fecha actual en formato YYYY-MM-DD
                                 const today = new Date().toISOString().split('T')[0];
-
-                                // Asignar la fecha actual como valor predeterminado
                                 document.getElementById('fecha_venta').value = today;
                             </script>
 
@@ -65,7 +62,6 @@
                             <script>
                                 document.getElementById('descripcion').addEventListener('input', function (e) {
                                     let inputValue = e.target.value;
-                                    // Formatear la primera letra alfabética como mayúscula
                                     e.target.value = inputValue.replace(/^(.*?)([a-zA-Z])/, function(_, prefix, firstLetter) {
                                         return prefix + firstLetter.toUpperCase();
                                     });

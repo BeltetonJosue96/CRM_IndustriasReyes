@@ -8,7 +8,6 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
             <div class="p-4 sm:p-8 bg-white dark:bg-gray-800 shadow sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
-                    <!-- Comienza el contenido -->
                     <div class="text-center">
                         <a href="{{ route('productos.create') }}">
                             <x-primary-button class="ms-3">
@@ -27,7 +26,6 @@
                         </a>
                         <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6">Productos registrados</h2>
                     </div>
-                    <!-- Cuadro de búsqueda centrado -->
                     <div class="flex flex-col items-center mt-2">
                         <form action="{{ route('productos.index') }}" method="GET" class="flex items-center space-x-2">
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar productos..." class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
@@ -87,7 +85,6 @@
                             </tbody>
                         </table>
                     @endif
-                    {{-- Paginación --}}
                     <div class="mt-6">
                         {{ $productos->links('vendor.pagination.tailwind') }}
                     </div>

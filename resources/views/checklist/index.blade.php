@@ -99,7 +99,6 @@
                             </tbody>
                         </table>
                     @endif
-                    {{-- Paginación --}}
                     <div class="mt-6">
                         {{ $checks->links('vendor.pagination.tailwind') }}
                     </div>
