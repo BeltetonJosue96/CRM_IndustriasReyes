@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Checklist;
+use App\Models\ControlDeManto;
 use App\Models\DetalleCheck;
 use App\Models\Estado;
 use App\Models\PlanManto;
+use Carbon\Carbon;
 use Hashids\Hashids;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -21,150 +23,171 @@ class DetalleCheckController extends Controller
 
     public function create($hashedId)
     {
+        //Decodificación del ID encriptado
         $id_check = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_check) {
-            abort(404);
+            return redirect()->back()->with('error', '❌ Hubo un problema con el Identificador del Checklist. Por favor, reportalo al soporte técnico.');
         }
+
+        //Obtención del Checklist
         $check = Checklist::findOrFail($id_check);
 
-        // Obtener los detalles del checklist con la información relacionada correcta y filtrada
-        $detalles = DB::table('control_de_manto')
-            ->join('cliente', 'control_de_manto.id_cliente', '=', 'cliente.id_cliente')
-            ->join('empresa', 'cliente.id_empresa', '=', 'empresa.id_empresa')
-            ->join('modelo', 'control_de_manto.id_modelo', '=', 'modelo.id_modelo')
-            ->join('linea', 'modelo.id_linea', '=', 'linea.id_linea')
-            ->join('producto', 'linea.id_producto', '=', 'producto.id_producto')
-            ->join('plan_manto', 'control_de_manto.id_plan_manto', '=', 'plan_manto.id_plan_manto')
-            ->where('control_de_manto.id_plan_manto', $check->id_plan_manto)
-            ->where('control_de_manto.proximo_manto', '>=', $check->fecha_creacion)
-            ->select(
-                'control_de_manto.id_control_manto',
-                'cliente.id_cliente',
-                'cliente.nombre as cliente_nombre',
-                'cliente.apellidos as cliente_apellidos',
-                'empresa.nombre as nombre_empresa',
-                'cliente.telefono',
-                'modelo.codigo as modelo_codigo',
-                'linea.nombre as linea_nombre',
-                'producto.nombre as producto_nombre',
-                'plan_manto.nombre as nombre_plan',
-                'control_de_manto.contador',
-                'control_de_manto.proximo_manto'
-            )
+        // No se realiza ningún formateo ni validación de la fecha_creacion
+        $fecha_creacion = $check->fecha_creacion;
+
+        $detalles = ControlDeManto::with(['cliente.empresa', 'modelo.linea.producto', 'planManto'])
+            ->where('id_plan_manto', $check->id_plan_manto)
+            ->whereDate('proximo_manto', '>=', $fecha_creacion) // Utilizar la fecha directamente sin reformatear
             ->get();
 
-        // Crear o actualizar registros en detalle_check
-        foreach ($detalles as $detalle) {
-            DetalleCheck::updateOrCreate(
-                ['id_check' => $id_check, 'id_control_manto' => $detalle->id_control_manto],
-                ['fecha_manto' => $detalle->proximo_manto, 'id_estado' => 1] // Asumiendo 1 como estado por defecto
-            );
+
+        //Verificar si se recuperaron detalles
+        if ($detalles->isEmpty()) {
+            return redirect()->back()->with('error', '❌ Ups! No existen registros con la fecha y el plan de mantenimiento seleccionado. Por favor, inténtalo con otros parámetros.');
         }
 
-        // Obtener los detalles actualizados para la vista
+        //Crear o actualizar registros en detalle_check
+        foreach ($detalles as $detalle) {
+            try {
+                DetalleCheck::updateOrCreate(
+                    [
+                        'id_check' => $id_check,
+                        'id_control_manto' => $detalle->id_control_manto
+                    ],
+                    [
+                        'fecha_manto' => $detalle->proximo_manto,
+                        'id_estado' => 1
+                    ]
+                );
+            } catch (\Exception $e) {
+                return redirect()->back()->with('error', '❌ Hubo un problema al generar los detalles del checklist. Por favor, inténtalo de nuevo.');
+            }
+        }
+
+        //Obtener los detalles actualizados para la vista
         $detallesCheck = DetalleCheck::where('id_check', $id_check)
-            ->with(['controlDeManto.cliente.empresa', 'controlDeManto.modelo.linea.producto', 'controlDeManto.planManto', 'estado'])
+            ->with([
+                'controlDeManto.cliente.empresa',
+                'controlDeManto.modelo.linea.producto',
+                'controlDeManto.planManto',
+                'estado'
+            ])
             ->get();
 
+        //Obtener todos los estados disponibles
         $estados = Estado::all();
 
+        //Retornar la vista con los datos
         return view('detalle_check.create', compact('check', 'detallesCheck', 'estados', 'hashedId'));
     }
 
     public function store(Request $request, $hashedId)
     {
+        //Validación de los datos de la solicitud
+        $validatedData = $request->validate([
+            'fecha_manto.*'      => 'nullable|date',
+            'estados.*'          => 'required|integer|exists:estado,id_estado',
+            'observaciones.*'    => 'nullable|string|max:255',
+        ]);
+
+        //Decodificación del ID encriptado
         $id_check = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_check) {
-            abort(404);
+            return redirect()->back()->with('error', '❌ Hubo un problema al generar los detalles del checklist. Por favor, inténtalo de nuevo.');
         }
 
-        $fecha_manto = $request->input('fecha_manto', []);
-        $estados = $request->input('estados', []);
-        $observaciones = $request->input('observaciones', []);
+        //Obtener los datos validados
+        $fecha_manto    = $validatedData['fecha_manto'] ?? [];
+        $estados        = $validatedData['estados'] ?? [];
+        $observaciones  = $validatedData['observaciones'] ?? [];
 
-        foreach ($estados as $id_detalle_check => $id_estado) {
-            DetalleCheck::where('id_detalle_check', $id_detalle_check)
-                ->update([
-                    'fecha_manto' => $fecha_manto[$id_detalle_check] ?? null,
-                    'id_estado' => $id_estado,
-                    'observaciones' => $observaciones[$id_detalle_check] ?? null,
-                ]);
+        try {
+            //Iniciar una transacción para asegurar la atomicidad
+            DB::transaction(function () use ($id_check, $fecha_manto, $estados, $observaciones) {
+                foreach ($estados as $id_detalle_check => $id_estado) {
+                    // Actualizar cada DetalleCheck correspondiente
+                    DetalleCheck::where('id_detalle_check', $id_detalle_check)
+                        ->update([
+                            'fecha_manto'     => $fecha_manto[$id_detalle_check] ?? null,
+                            'id_estado'       => $id_estado,
+                            'observaciones'   => $observaciones[$id_detalle_check] ?? null,
+                        ]);
+                }
+            });
+
+            //Redireccionar con mensaje de éxito
+            return redirect()->route('checklist.index')->with('success', '✅ Detalles del checklist actualizado correctamente.');
+
+        } catch (\Exception $e) {
+            //Redireccionar de vuelta con mensaje de error
+            return redirect()->back()->with('error', '❌ Hubo un problema al actualizar los detalles del checklist. Por favor, inténtalo de nuevo.');
         }
-
-        return redirect()->route('checklist.index')->with('success', '✅ Detalles del checklist actualizados correctamente.');
     }
 
     public function edit($hashedId)
     {
+        // Decodificación del ID encriptado
         $id_check = $this->hashids->decode($hashedId)[0] ?? null;
         if (!$id_check) {
-            abort(404);
+            return redirect()->back()->with('error', '❌ Hubo un problema con el Identificador del Checklist. Por favor, reportalo al soporte técnico.');
         }
+
+        // Obtención del Checklist
         $check = Checklist::findOrFail($id_check);
 
-        // Obtener los detalles del checklist con la información relacionada correcta y filtrada
-        $detalles = DB::table('control_de_manto')
-            ->join('cliente', 'control_de_manto.id_cliente', '=', 'cliente.id_cliente')
-            ->join('empresa', 'cliente.id_empresa', '=', 'empresa.id_empresa')
-            ->join('modelo', 'control_de_manto.id_modelo', '=', 'modelo.id_modelo')
-            ->join('linea', 'modelo.id_linea', '=', 'linea.id_linea')
-            ->join('producto', 'linea.id_producto', '=', 'producto.id_producto')
-            ->join('plan_manto', 'control_de_manto.id_plan_manto', '=', 'plan_manto.id_plan_manto')
-            ->where('control_de_manto.id_plan_manto', $check->id_plan_manto)
-            ->where('control_de_manto.proximo_manto', '>=', $check->fecha_creacion)
-            ->select(
-                'control_de_manto.id_control_manto',
-                'cliente.id_cliente',
-                'cliente.nombre as cliente_nombre',
-                'cliente.apellidos as cliente_apellidos',
-                'empresa.nombre as nombre_empresa',
-                'cliente.telefono',
-                'modelo.codigo as modelo_codigo',
-                'linea.nombre as linea_nombre',
-                'producto.nombre as producto_nombre',
-                'plan_manto.nombre as nombre_plan',
-                'control_de_manto.contador',
-                'control_de_manto.proximo_manto'
-            )
-            ->get();
-
-        // Obtener los detalles actualizados para la vista
+        // Obtener los detalles del checklist
         $detallesCheck = DetalleCheck::where('id_check', $id_check)
             ->with(['controlDeManto.cliente.empresa', 'controlDeManto.modelo.linea.producto', 'controlDeManto.planManto', 'estado'])
             ->get();
 
+        // Obtener todos los estados disponibles
         $estados = Estado::all();
 
+        // Retornar la vista de edición con los datos
         return view('detalle_check.edit', compact('check', 'detallesCheck', 'estados', 'hashedId'));
     }
 
     public function update(Request $request, $hashedId)
     {
-        $id_check = $this->hashids->decode($hashedId)[0] ?? null;
-        if (!$id_check) {
-            abort(404);
-        }
-
-        // Validar los datos de entrada
-        $validated = $request->validate([
-            'fecha_manto.*' => 'date',
-            'estado.*' => 'required|exists:estados,id',
-            'observaciones.*' => 'nullable|string',
+        // Validación de los datos de la solicitud
+        $validatedData = $request->validate([
+            'fecha_manto.*'      => 'nullable|date',
+            'estados.*'          => 'required|integer|exists:estado,id_estado',
+            'observaciones.*'    => 'nullable|string|max:255',
         ]);
 
-        $fecha_manto = $request->input('fecha_manto', []);
-        $estados = $request->input('estados', []);
-        $observaciones = $request->input('observaciones', []);
-
-        foreach ($estados as $id_detalle_check => $id_estado) {
-            DetalleCheck::where('id_detalle_check', $id_detalle_check)
-                ->update([
-                    'fecha_manto' => $fecha_manto[$id_detalle_check] ?? null,
-                    'id_estado' => $id_estado,
-                    'observaciones' => $observaciones[$id_detalle_check] ?? null,
-                ]);
+        // Decodificación del ID encriptado
+        $id_check = $this->hashids->decode($hashedId)[0] ?? null;
+        if (!$id_check) {
+            return redirect()->back()->with('error', '❌ Hubo un problema al actualizar los detalles del checklist. Por favor, inténtalo de nuevo.');
         }
 
-        return redirect()->route('checklist.index')->with('success', '✅ Detalles del checklist actualizados correctamente.');
+        // Obtener los datos validados
+        $fecha_manto    = $validatedData['fecha_manto'] ?? [];
+        $estados        = $validatedData['estados'] ?? [];
+        $observaciones  = $validatedData['observaciones'] ?? [];
+
+        try {
+            // Iniciar una transacción para asegurar la atomicidad
+            DB::transaction(function () use ($id_check, $fecha_manto, $estados, $observaciones) {
+                foreach ($estados as $id_detalle_check => $id_estado) {
+                    // Actualizar cada DetalleCheck correspondiente
+                    DetalleCheck::where('id_detalle_check', $id_detalle_check)
+                        ->update([
+                            'fecha_manto'     => $fecha_manto[$id_detalle_check] ?? null,
+                            'id_estado'       => $id_estado,
+                            'observaciones'   => $observaciones[$id_detalle_check] ?? null,
+                        ]);
+                }
+            });
+
+            // Redireccionar con mensaje de éxito
+            return redirect()->route('checklist.index')->with('success', '✅ Detalles del checklist actualizados correctamente.');
+
+        } catch (\Exception $e) {
+            // Redireccionar de vuelta con mensaje de error
+            return redirect()->back()->with('error', '❌ Hubo un problema al actualizar los detalles del checklist. Por favor, inténtalo de nuevo.');
+        }
     }
+
 }

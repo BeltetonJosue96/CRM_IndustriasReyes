@@ -19,12 +19,6 @@ return new class extends Migration
             $table->date('fecha_programada')->nullable();
             $table->integer('contador')->nullable();
             $table->string('observaciones', 245)->nullable();
-
-            // Definición de llaves foráneas
-            $table->foreign('id_detalle_check')->references('id_detalle_check')->on('detalle_check')->onDelete('set null');
-            $table->foreign('id_control_manto')->references('id_control_manto')->on('control_de_manto')->onDelete('set null');
-            $table->foreign('id_estado')->references('id_estado')->on('estado')->onDelete('set null');
-
         });
     }
 

@@ -63,6 +63,9 @@
                             </a>
                         </div>
                         <div class="w-full flex justify-center">
+
+                        </div>
+                        <div class="w-full flex justify-center">
                             <a href="{{ route('dashboard') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
                                 <img src="https://cdn-icons-png.freepik.com/256/12208/12208421.png" alt="Regresar" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">

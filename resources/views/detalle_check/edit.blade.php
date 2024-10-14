@@ -42,28 +42,39 @@
                                     <th class="px-4 py-2">Equipo</th>
                                     <th class="px-4 py-2">Plan de Mantenimiento</th>
                                     <th class="px-4 py-2">Estado</th>
-                                    <th class="px-4 py-2">Fecha</th>
+                                    <th class="px-4 py-2">Fecha (programado/repogramado)</th>
                                     <th class="px-4 py-2">Observaciones</th>
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700">
-                                @foreach($detallesCheck as $index => $detalle)
+                                @forelse($detallesCheck as $index => $detalle)
                                     <tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+                                        <!-- Número de fila -->
                                         <td class="px-4 py-2 text-center">{{ $index + 1 }}</td>
+
+                                        <!-- Información del Cliente -->
                                         <td class="px-4 py-2 text-center">
-                                            ID {{ $detalle->controlDeManto->cliente->id_cliente+1000 }}-{{ \Carbon\Carbon::parse($detalle->controlDeManto->cliente->created_at)->year }} <br>
-                                            {{ $detalle->controlDeManto->cliente->nombre }} {{ $detalle->controlDeManto->cliente->apellidos }} <br>
-                                            {{ $detalle->controlDeManto->cliente->empresa->nombre }} <br>
-                                            Tel: {{ $detalle->controlDeManto->cliente->telefono }}
+                                            ID {{ optional($detalle->controlDeManto->cliente)->id_cliente + 1000 }}-{{ optional($detalle->controlDeManto->cliente)->created_at ? \Carbon\Carbon::parse(optional($detalle->controlDeManto->cliente)->created_at)->year : 'N/A' }} <br>
+                                            {{ optional($detalle->controlDeManto->cliente)->nombre ?? 'N/A' }} {{ optional($detalle->controlDeManto->cliente)->apellidos ?? '' }} <br>
+                                            {{ optional(optional($detalle->controlDeManto->cliente)->empresa)->nombre ?? 'N/A' }} <br>
+                                            Tel: {{ optional($detalle->controlDeManto->cliente)->telefono ?? 'N/A' }}
                                         </td>
+
+                                        <!-- Información del Modelo -->
                                         <td class="px-4 py-2 text-center">
-                                            Modelo: {{ $detalle->controlDeManto->modelo->codigo }}<br>
-                                            Línea: {{ $detalle->controlDeManto->modelo->linea->nombre }}<br>
-                                            Producto: {{ $detalle->controlDeManto->modelo->linea->producto->nombre }}
+                                            Modelo: {{ optional($detalle->controlDeManto->modelo)->codigo ?? 'N/A' }}<br>
+                                            Línea: {{ optional(optional($detalle->controlDeManto->modelo)->linea)->nombre ?? 'N/A' }}<br>
+                                            Producto: {{ optional(optional(optional($detalle->controlDeManto->modelo)->linea)->producto)->nombre ?? 'N/A' }}
                                         </td>
-                                        <td class="px-4 py-2 text-center">Plan: {{ $detalle->controlDeManto->planManto->nombre }}<br>
-                                            Servicio No. {{ $detalle->controlDeManto->contador }}</td>
-                                        <td class="px-4 py-2">
+
+                                        <!-- Información del Plan -->
+                                        <td class="px-4 py-2 text-center">
+                                            Plan: {{ optional($detalle->controlDeManto->planManto)->nombre ?? 'N/A' }}<br>
+                                            Servicio No. {{ $detalle->controlDeManto->contador ?? 'N/A' }}
+                                        </td>
+
+                                        <!-- Selección de Estado -->
+                                        <td class="px-4 py-2 text-center">
                                             <select name="estados[{{ $detalle->id_detalle_check }}]" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
                                                 @foreach($estados as $estado)
                                                     <option value="{{ $estado->id_estado }}" {{ $detalle->id_estado == $estado->id_estado ? 'selected' : '' }}>
@@ -72,25 +83,46 @@
                                                 @endforeach
                                             </select>
                                         </td>
-                                        <td class="px-4 py-2">
-                                            <input type="date" name="fecha_manto[{{ $detalle->id_detalle_check }}]" value="{{ $detalle->fecha_manto }}" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">
+
+                                        <!-- Input de Fecha de Manto -->
+                                        <td class="px-4 py-2 text-center">
+                                            <input
+                                                type="date"
+                                                name="fecha_manto[{{ $detalle->id_detalle_check }}]"
+                                                value="{{ $detalle->fecha_manto}}"
+                                                class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                                            >
                                         </td>
-                                        <td class="px-4 py-2">
-                                            <input type="text" id="observaciones" name="observaciones[{{ $detalle->id_detalle_check }}]" value="{{ $detalle->observaciones }}" class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600" placeholder="Aclaraciones">
+
+                                        <!-- Input de Observaciones -->
+                                        <td class="px-4 py-2 text-center">
+                                            <input
+                                                type="text"
+                                                id="observaciones[{{ $detalle->id_detalle_check }}]"
+                                                name="observaciones[{{ $detalle->id_detalle_check }}]"
+                                                value="{{ $detalle->observaciones }}"
+                                                class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600"
+                                                placeholder="Aclaraciones"
+                                            >
+                                            <script>
+                                                document.getElementById('observaciones[{{ $detalle->id_detalle_check }}]').addEventListener('input', function (e) {
+                                                    let inputValue = e.target.value;
+                                                    // Formatear la primera letra alfabética como mayúscula, incluyendo vocales con acento
+                                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-ZÁÉÍÓÚáéíóú])/, function(_, prefix, firstLetter) {
+                                                        return prefix + firstLetter.toUpperCase();
+                                                    });
+                                                });
+                                            </script>
                                         </td>
                                     </tr>
-                                @endforeach
+                                @empty
+                                    <tr>
+                                        <td colspan="7" class="px-4 py-2 text-center">No hay detalles disponibles.</td>
+                                    </tr>
+                                @endforelse
                                 </tbody>
                             </table>
-                            <script>
-                                document.getElementById('observaciones').addEventListener('input', function (e) {
-                                    let inputValue = e.target.value;
-                                    // Formatear la primera letra alfabética como mayúscula, incluyendo vocales con acento
-                                    e.target.value = inputValue.replace(/^(.*?)([a-zA-ZÁÉÍÓÚáéíóú])/, function(_, prefix, firstLetter) {
-                                        return prefix + firstLetter.toUpperCase();
-                                    });
-                                });
-                            </script>
+
                             <div class="flex justify-center mt-4">
                                 <x-primary-button type="submit">
                                     Guardar Cambios

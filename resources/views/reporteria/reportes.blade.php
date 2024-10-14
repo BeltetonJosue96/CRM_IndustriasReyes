@@ -9,6 +9,19 @@
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
+                    <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-8 mb-8 text-center">Visualización de registros del sistema</h2>
+                    <div class="flex justify-center space-x-2 mt-4">
+                        <x-primary-button class="ms-3">
+                            <a href="{{ route('historial.index') }}">
+                                {{ __('📖 Historial de Mantenimientos') }}
+                            </a>
+                        </x-primary-button>
+                        <x-primary-button class="ms-3">
+                            <a href="{{ route('controlmantos.index') }}">
+                                {{ __('⚙️ Control de Mantenimiento') }}
+                            </a>
+                        </x-primary-button>
+                    </div>
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-6 mb-6 text-center">Parámetros del reporte</h2>
                     <form method="GET" action="{{ route('reportes') }}" class="mb-6">
                         <div class="flex flex-wrap -mx-2">
@@ -100,15 +113,13 @@
                                 </tfoot>
                             </table>
                         </div>
-
-                        <!-- Paginación -->
-                        <div class="mt-4">
-                            {{ $detalles->links() }}
-                        </div>
                     @else
                         <p class="text-center text-gray-500 dark:text-gray-400">No se encontraron registros con los filtros aplicados.</p>
                     @endif
-
+                        <!-- Paginación -->
+                        <div class="mt-4">
+                            {{ $detalles->links('vendor.pagination.tailwind') }}
+                        </div>
                 </div>
             </div>
         </div>
