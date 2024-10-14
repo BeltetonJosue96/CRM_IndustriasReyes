@@ -10,7 +10,7 @@ return new class extends Migration {
     public function up(): void
     {
         DB::unprepared("
-            CREATE DEFINER=`root`@`%` TRIGGER `actualizador_de_mantos`
+            CREATE TRIGGER `actualizador_de_mantos`
             AFTER UPDATE ON `detalle_venta`
             FOR EACH ROW
             BEGIN
@@ -39,7 +39,7 @@ return new class extends Migration {
         ");
 
         DB::unprepared("
-            CREATE DEFINER=`root`@`%` TRIGGER `actualizar_proximo_manto`
+            CREATE TRIGGER `actualizar_proximo_manto`
             AFTER UPDATE ON `detalle_check`
             FOR EACH ROW
             BEGIN
@@ -60,7 +60,7 @@ return new class extends Migration {
         ");
 
         DB::unprepared("
-            CREATE DEFINER=`root`@`%` TRIGGER `calculador_de_fechas`
+            CREATE TRIGGER `calculador_de_fechas`
             BEFORE INSERT ON `control_de_manto`
             FOR EACH ROW
             BEGIN
@@ -81,7 +81,7 @@ return new class extends Migration {
         ");
 
         DB::unprepared("
-            CREATE DEFINER=`root`@`%` TRIGGER `calcular_nueva_fecha`
+            CREATE TRIGGER `calcular_nueva_fecha`
             BEFORE UPDATE ON `control_de_manto`
             FOR EACH ROW
             BEGIN
@@ -102,7 +102,7 @@ return new class extends Migration {
         ");
 
         DB::unprepared("
-            CREATE DEFINER=`root`@`%` TRIGGER `insertador_de_mantos`
+            CREATE TRIGGER `insertador_de_mantos`
             AFTER INSERT ON `detalle_venta`
             FOR EACH ROW
             BEGIN
@@ -121,11 +121,18 @@ return new class extends Migration {
         ");
 
         DB::unprepared("
-            CREATE DEFINER=`root`@`%` TRIGGER `registrar_historial`
+            CREATE TRIGGER `registrar_historial`
             AFTER UPDATE ON `detalle_check`
             FOR EACH ROW
             BEGIN
-                INSERT INTO historial_manto (id_detalle_check, id_control_manto, id_estado, fecha_programada, contador, observaciones)
+                INSERT INTO historial_manto (
+                    id_detalle_check,
+                    id_control_manto,
+                    id_estado,
+                    fecha_programada,
+                    contador,
+                    observaciones
+                )
                 VALUES (
                     NEW.id_detalle_check,
                     NEW.id_control_manto,
