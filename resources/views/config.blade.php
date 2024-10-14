@@ -15,7 +15,7 @@
                     <div class="grid grid-cols-2 gap-4 mt-6 place-items-center">
                         <div class="w-full flex justify-center">
                             <a href="{{ route('modelos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/12019/12019654.png" alt="Modelos" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/modelos.png') }}" alt="Modelos" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Catálogo de Modelos
                                 </span>
@@ -23,7 +23,7 @@
                         </div>
                         <div class="w-full flex justify-center">
                             <a href="{{ route('estados.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/8558/8558628.png" alt="Estados" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/estados.png') }}" alt="Estados" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Estados
                                 </span>
@@ -31,7 +31,7 @@
                         </div>
                         <div class="w-full flex justify-center">
                             <a href="{{ route('lineas.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/12879/12879103.png" alt="Líneas" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/lineas.png') }}" alt="Líneas" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Catálogo de Líneas
                                 </span>
@@ -39,7 +39,7 @@
                         </div>
                         <div class="w-full flex justify-center">
                             <a href="{{ route('planes.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/4233/4233834.png" alt="Planes" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/planesmanto.png') }}" alt="Planes" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Planes de Mantenimiento
                                 </span>
@@ -47,7 +47,7 @@
                         </div>
                         <div class="w-full flex justify-center">
                             <a href="{{ route('productos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/2702/2702154.png" alt="Productos" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/productos.png') }}" alt="Productos" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Catálogo de Productos
                                 </span>
@@ -56,7 +56,7 @@
 
                         <div class="w-full flex justify-center">
                             <a href="{{ route('departamentos.index') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/2060/2060593.png" alt="Departamentos" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/departamentos.png') }}" alt="Departamentos" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Departamentos de Guatemala
                                 </span>
@@ -67,7 +67,7 @@
                         </div>
                         <div class="w-full flex justify-center">
                             <a href="{{ route('dashboard') }}" class="w-40 p-4 flex flex-col items-center justify-center bg-white dark:bg-gray-800">
-                                <img src="https://cdn-icons-png.freepik.com/256/12208/12208421.png" alt="Regresar" class="w-20 h-20 mb-2">
+                                <img src="{{ asset('images/regresar.png') }}" alt="Regresar" class="w-20 h-20 mb-2">
                                 <span class="text-center text-lg font-semibold text-gray-800 dark:text-gray-200">
                                     Regresar
                                 </span>

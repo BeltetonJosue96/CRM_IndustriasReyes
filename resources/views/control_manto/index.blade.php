@@ -10,14 +10,13 @@
             <div class="bg-white dark:bg-gray-800 overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 dark:text-gray-100">
                     <div class="flex justify-center space-x-2 mt-4">
-                        <x-danger-button class="ms-3">
-                            <a href="{{ route('reportes') }}">
+                        <a href="{{ route('reportes') }}" class="ms-3">
+                            <x-danger-button>
                                 {{ __('Regresar') }}
-                            </a>
-                        </x-danger-button>
+                            </x-danger-button>
+                        </a>
                     </div>
                     <h2 class="font-semibold text-xl text-gray-800 dark:text-gray-200 leading-tight mt-8 mb-8 text-center">Registro del Control de Mantenimientos</h2>
-                    <!-- Cuadro de búsqueda centrado -->
                     <div class="flex flex-col items-center mt-2">
                         <form action="{{ route('controlmantos.index') }}" method="GET" class="flex items-center space-x-2">
                             <input type="text" name="search" value="{{ request('search') }}" placeholder="Buscar en el control..." class="px-4 py-2 border rounded-md dark:bg-gray-700 dark:text-white dark:border-gray-600">

@@ -66,11 +66,11 @@ class ReportesController extends Controller
             ->orderBy('venta.fecha_venta', 'asc')
             ->select('detalle_venta.*');
 
-        // Obtener los detalles con paginación
-        $detalles = $detallesQuery->paginate(20)->appends($request->all());
-
-        // Calcular el total
+        // Calcular el total antes de la paginación
         $total = $detallesQuery->sum('costo');
+
+        // Obtener los detalles con paginación
+        $detalles = $detallesQuery->paginate(10)->appends($request->all());
 
         return view('reporteria.reportes', compact('detalles', 'clientes', 'empresas', 'id_cliente', 'id_empresa', 'fecha_inicio', 'fecha_fin', 'total'));
     }

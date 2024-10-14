@@ -20,6 +20,11 @@
                                 {{ __('Ir a ventas') }}
                             </x-primary-button>
                         </a>
+                        <a href="{{ route('reportes') }}">
+                            <x-primary-button class="ms-3">
+                                {{ __('Ir a Reportería') }}
+                            </x-primary-button>
+                        </a>
                         <a href="{{ route('dashboard') }}">
                             <x-danger-button class="ms-3">
                                 {{ __('Regresar') }}
