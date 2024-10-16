@@ -120,24 +120,6 @@
                             </div>
 
                         </div>
-                        <script>
-                            function formatInputToUpperCase(element) {
-                                element.addEventListener('input', function (e) {
-                                    let inputValue = e.target.value;
-                                    let formattedValue = inputValue.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
-                                    formattedValue = formattedValue.replace(/(?:^|\s)([a-záéíóúñ])/g, function (match, char) {
-                                        return match.replace(char, char.toUpperCase());
-                                    });
-
-                                    e.target.value = formattedValue;
-                                });
-                            }
-
-                            formatInputToUpperCase(document.getElementById('nombre'));
-                            formatInputToUpperCase(document.getElementById('apellidos'));
-                            formatInputToUpperCase(document.getElementById('municipio'));
-                            formatInputToUpperCase(document.getElementById('cargo'));
-                        </script>
 
                         <div class="flex justify-center space-x-4 mt-6">
                             <x-primary-button class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg shadow">
@@ -157,4 +139,28 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            function formatInputToUpperCase(element) {
+                element.addEventListener('input', function (e) {
+                    let inputValue = e.target.value;
+                    let formattedValue = inputValue.replace(/[^a-zA-ZÀ-ÿ\s]/g, '');
+                    formattedValue = formattedValue.replace(/(?:^|\s)([a-záéíóúñ])/g, function (match, char) {
+                        return match.replace(char, char.toUpperCase());
+                    });
+
+                    e.target.value = formattedValue;
+                });
+            }
+
+            formatInputToUpperCase(document.getElementById('nombre'));
+            formatInputToUpperCase(document.getElementById('apellidos'));
+            // Asegúrate de que los elementos 'municipio' y 'cargo' existan
+            const municipio = document.getElementById('municipio');
+            const cargo = document.getElementById('cargo');
+            if (municipio) formatInputToUpperCase(municipio);
+            if (cargo) formatInputToUpperCase(cargo);
+        });
+    </script>
+
 </x-app-layout>
